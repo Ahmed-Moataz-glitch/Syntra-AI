@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "537526467464",
+    "project_id": "syntra-ai-c02e5",
+    "storage_bucket": "syntra-ai-c02e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537526467464:android:d048fb8512e58ed299983d",
+        "android_client_info": {
+          "package_name": "com.example.syntra_ai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537526467464-t5tipnvs375seo99daipoquuln01k65n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.syntra_ai",
+            "certificate_hash": "fafc9666be235ea8bd062bf217c4584b5a5a3b0c"
+          }
+        },
+        {
+          "client_id": "537526467464-5qqbhu03pde7eh1o533d7mv1p10v2u5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm5DjvwMg43-MCkbiU2D52MjRO5TLmKn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537526467464-5qqbhu03pde7eh1o533d7mv1p10v2u5i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "537526467464-322fr4lhs45udjljs0u2j1pkio37oq94.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.syntraAi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

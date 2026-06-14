@@ -9,18 +9,19 @@ import 'package:syntra_ai/core/utils/app_routes.dart';
 import 'package:syntra_ai/features/auth/data/api/auth_api.dart';
 import 'package:syntra_ai/features/auth/data/repo/data_source/auth_data_source_impl.dart';
 import 'package:syntra_ai/features/auth/data/repo/repo/auth_repo_impl.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/repo/data_source/auth_data_source.dart';
 import 'package:syntra_ai/features/auth/domain/repo/repo/auth_repo.dart';
+import 'package:syntra_ai/features/auth/domain/use_case/forget_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_email_and_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_github_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_google_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/register_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/reset_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/save_user_profile_use_case.dart';
-import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_existing_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_new_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/validate_otp_use_case.dart';
-import 'package:syntra_ai/features/auth/presentation/view/widgets/gradient_button_widget.dart';
+import 'package:syntra_ai/core/view/widgets/gradient_button_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/timer_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/verify_code_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view_model/auth_cubit.dart';
@@ -51,8 +52,9 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
     LoginWithGoogleUseCase loginWithGoogleUseCase = LoginWithGoogleUseCase(authRepo);
     LoginWithGithubUseCase loginWithGithubUseCase = LoginWithGithubUseCase(authRepo);
     SendOtpForNewUserUseCase sendOtpForNewUserUseCase = SendOtpForNewUserUseCase(authRepo);
-    SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase = SendOtpForExistingUserUseCase(authRepo);
+    // SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase = SendOtpForExistingUserUseCase(authRepo);
     ValidateOtpUseCase validateOtpUseCase = ValidateOtpUseCase(authRepo);
+    ForgetPasswordUseCase forgetPasswordUseCase = ForgetPasswordUseCase(authRepo);
     ResetPasswordUseCase resetPasswordUseCase = ResetPasswordUseCase(authRepo);
     authCubit = AuthCubit(
       saveUserProfileUseCase: saveUserProfileUseCase,
@@ -61,8 +63,9 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
       loginWithGoogleUseCase: loginWithGoogleUseCase,
       loginWithGithubUseCase: loginWithGithubUseCase,
       sendOtpForNewUserUseCase: sendOtpForNewUserUseCase,
-      sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
+      // sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
       validateOtpUseCase: validateOtpUseCase,
+      forgetPasswordUseCase: forgetPasswordUseCase,
       resetPasswordUseCase: resetPasswordUseCase,
     );
   }
@@ -111,7 +114,13 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
             );
           }
           if (state is OtpVerified) {
-            Navigator.of(context).pushNamed(AppRoutes.resetPassword);
+            Navigator.of(context).pushNamed(
+              AppRoutes.resetPassword,
+              arguments: {
+                'email': widget.email ?? '',
+                'otp': otpController.text.trim(),
+              },
+            );
           }
           if (state is VerifyingOtpError) {
             AppDialogs.showSnackBar(
@@ -149,7 +158,9 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                   children: [
                     TextSpan(
                       text: widget.email ?? 'ahmedmoataz123@gmail.com',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                       // style: TextStyle(
                       //   fontSize: 18.sp,
                       //   color: AppColors.black,
@@ -175,7 +186,11 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
               SizedBox(height: size.height * 0.02),
               GestureDetector(
                 onTap: () async {
-                  await authCubit.sendOtpForExistingUser(widget.email ?? '');
+                  await authCubit.forgetPassword(
+                    ForgetPasswordRequestEntity(
+                      email: widget.email ?? '',
+                    ),
+                  );
                 },
                 child: Text.rich(
                   TextSpan(

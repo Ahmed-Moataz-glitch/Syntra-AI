@@ -12,7 +12,9 @@ import 'package:syntra_ai/core/utils/app_dialogs.dart';
 import 'package:syntra_ai/core/utils/app_localization.dart';
 import 'package:syntra_ai/core/utils/app_routes.dart';
 import 'package:syntra_ai/core/utils/app_toast.dart';
+import 'package:syntra_ai/core/utils/shared_preferences.dart';
 import 'package:syntra_ai/core/view/widgets/logo_widget.dart';
+import 'package:syntra_ai/core/view/widgets/secondary_gradient_button_widget.dart';
 import 'package:syntra_ai/core/view_model/language_cubit/language_cubit.dart';
 import 'package:syntra_ai/core/view_model/theme_cubit/theme_cubit.dart';
 import 'package:syntra_ai/features/profile/data/api/profile_api.dart';
@@ -27,9 +29,10 @@ import 'package:syntra_ai/features/profile/domain/use_case/get_user_profile_use_
 import 'package:syntra_ai/features/profile/domain/use_case/logout_use_case.dart';
 import 'package:syntra_ai/features/profile/domain/use_case/pick_user_profile_image_use_case.dart';
 import 'package:syntra_ai/features/profile/domain/use_case/upload_user_profile_image_use_case.dart';
+import 'package:syntra_ai/features/profile/presentation/view/widgets/finished_skills_widget.dart';
+import 'package:syntra_ai/features/profile/presentation/view/widgets/finished_tracks_widget.dart';
 import 'package:syntra_ai/features/profile/presentation/view/widgets/language_drop_down_menu_widget.dart';
 import 'package:syntra_ai/features/profile/presentation/view/widgets/theme_drop_down_menu_widget.dart';
-import 'package:syntra_ai/features/profile/presentation/view/widgets/secondary_gradient_button_widget.dart';
 import 'package:syntra_ai/features/profile/presentation/view/widgets/user_item_widget.dart';
 import 'package:syntra_ai/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:syntra_ai/generated/l10n.dart';
@@ -45,6 +48,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late ProfileCubit profileCubit;
   bool isDarkMode = false;
+  late final String userId;
 
   @override
   void initState() {
@@ -74,10 +78,12 @@ class _ProfilePageState extends State<ProfilePage> {
       deleteUserProfileUseCase: deleteUserProfileUseCase,
     );
     final userProfile = profileCubit.userProfile;
-    // profileCubit.getUserProfile(userProfile!.id);
-    userProfile != null
-        ? profileCubit.getUserProfile(userProfile.id)
-        : profileCubit.fetchUserData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      userId = await FlutterSharedPreferences.instance.getStudentId();
+      userProfile != null
+          ? profileCubit.getUserProfile(userProfile.id)
+          : await profileCubit.fetchUserData();
+    });
   }
 
   @override
@@ -90,15 +96,17 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isLightMode = Theme.of(context).brightness == Brightness.light;
-    bool isLoading = false;
+    bool isLoading = true;
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
+              backgroundColor: AppColors.transparent,
+              shadowColor: AppColors.purple.withAlpha(35),
               floating: true,
               scrolledUnderElevation: 16,
-              leadingWidth: size.width * 0.42,
+              leadingWidth: size.width * 0.445,
               actionsPadding: EdgeInsets.only(right: size.width * 0.03),
               leading: const LogoWidget(),
               actions: [
@@ -134,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   child: InkWell(
                     onTap: () async {
-                      await profileCubit.logout();
+                      await profileCubit.logout(userId);
                     },
                     splashFactory: NoSplash.splashFactory,
                     child: Container(
@@ -142,16 +150,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           ? EdgeInsets.only(left: 12.w, top: 10.h, bottom: 6.h)
                           : EdgeInsets.zero,
                       padding: AppLocalization.isArabic()
-                      ? EdgeInsets.only(
-                        right: 16.w,
-                        top: 2.h,
-                        bottom: 2.h,
-                      )
-                      : EdgeInsets.only(
-                        left: 16.w,
-                        top: 2.h,
-                        bottom: 2.h,
-                      ),
+                          ? EdgeInsets.only(
+                              right: 16.w,
+                              top: 2.h,
+                              bottom: 2.h,
+                            )
+                          : EdgeInsets.only(
+                              left: 16.w,
+                              top: 2.h,
+                              bottom: 2.h,
+                            ),
                       decoration: BoxDecoration(
                         color: isLightMode
                             ? AppColors.gray.withAlpha(60)
@@ -171,11 +179,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.red,
                                 ),
-                            // style: TextStyle(
-                            //   fontSize: 16.sp,
-                            //   color: AppColors.red,
-                            //   fontWeight: FontWeight.w600,
-                            // ),
                           ),
                           SvgPicture.asset(
                             AppAssets.signinIcon,
@@ -224,11 +227,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color:
                                           isLightMode ? null : AppColors.blue,
                                     ),
-                                // style: TextStyle(
-                                //   fontSize: 18.sp,
-                                //   color: AppColors.purple,
-                                //   fontWeight: FontWeight.w600,
-                                // ),
                               ),
                               Text(
                                 S.of(context).profile_page_title2,
@@ -242,11 +240,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           : AppColors.primary.withAlpha(240),
                                       fontWeight: FontWeight.w700,
                                     ),
-                                // style: TextStyle(
-                                //   fontSize: 28.sp,
-                                //   color: AppColors.black,
-                                //   fontWeight: FontWeight.w700,
-                                // ),
                               ),
                               Text(
                                 textAlign: TextAlign.center,
@@ -263,11 +256,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ? null
                                           : AppColors.primary.withAlpha(170),
                                     ),
-                                // style: TextStyle(
-                                //   fontSize: 14.sp,
-                                //   color: AppColors.secondary.withAlpha(220),
-                                //   fontWeight: FontWeight.w600,
-                                // ),
                               ),
                             ],
                           ),
@@ -281,26 +269,34 @@ class _ProfilePageState extends State<ProfilePage> {
                           value: 'english',
                           child: Text(
                             S.of(context).english,
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                              color: AppColors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: AppColors.blue,
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
                           onTap: () async {
-                            await LanguageCubit.get(context).selectLanguage(LanguageModeState.english);
+                            await LanguageCubit.get(context)
+                                .selectLanguage(LanguageModeState.english);
                           },
                         ),
                         DropdownMenuItem(
                           value: 'arabic',
                           child: Text(
                             S.of(context).arabic,
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                              color: AppColors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: AppColors.blue,
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
                           onTap: () async {
-                            await LanguageCubit.get(context).selectLanguage(LanguageModeState.arabic);
+                            await LanguageCubit.get(context)
+                                .selectLanguage(LanguageModeState.arabic);
                           },
                         ),
                       ],
@@ -312,39 +308,51 @@ class _ProfilePageState extends State<ProfilePage> {
                           value: 'light',
                           child: Text(
                             S.of(context).light_mode,
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                              color: AppColors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: AppColors.blue,
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
                           onTap: () async {
-                            await ThemeCubit.get(context).selectTheme(ThemeModeState.light);
+                            await ThemeCubit.get(context)
+                                .selectTheme(ThemeModeState.light);
                           },
                         ),
                         DropdownMenuItem(
                           value: 'dark',
                           child: Text(
                             S.of(context).dark_mode,
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                              color: AppColors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: AppColors.blue,
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
                           onTap: () async {
-                            await ThemeCubit.get(context).selectTheme(ThemeModeState.dark);
+                            await ThemeCubit.get(context)
+                                .selectTheme(ThemeModeState.dark);
                           },
                         ),
                         DropdownMenuItem(
                           value: 'system',
                           child: Text(
                             S.of(context).system_mode,
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                              color: AppColors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: AppColors.blue,
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
                           onTap: () async {
-                            await ThemeCubit.get(context).selectTheme(ThemeModeState.system);
+                            await ThemeCubit.get(context)
+                                .selectTheme(ThemeModeState.system);
                           },
                         ),
                       ],
@@ -415,15 +423,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       profileCubit.pickedUserProfileImage;
                                   final userProfileImage =
                                       profileCubit.userProfileImage;
-                                  // if (state is ProfileLoading) {
-                                  // return CircleAvatar(
-                                  //   radius: size.width * 0.2,
-                                  //   backgroundColor: AppColors.scaffoldBackgroundColor,
-                                  //   child: Lottie.asset(
-                                  //     AppAssets.loadingLottie,
-                                  //   ),
-                                  // );
-                                  // }
                                   return Stack(
                                     children: [
                                       ClipRRect(
@@ -511,8 +510,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     return Skeletonizer(
                                       enabled: isLoading,
                                       containersColor:
-                                          AppColors.dividerColor.withAlpha(150),
-                                      ignoreContainers: true,
+                                          AppColors.dividerColor.withAlpha(50),
+                                      ignoreContainers: false,
                                       child: UserItemWidget(
                                         user: UserDataEntity(
                                           id: '',
@@ -529,6 +528,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     );
                                   }
                                   if (state is ProfileLoaded) {
+                                    // userDataResponseEntity =
+                                    //     state.userDataResponseEntity;
                                     isLoading = false;
                                     return Skeletonizer(
                                       enabled: isLoading,
@@ -538,6 +539,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                     );
                                   }
                                   if (state is GetUserProfileSuccess) {
+                                    // userDataResponseEntity =
+                                    //     UserDataResponseEntity(
+                                    //   user: UserDataEntity(
+                                    //     id: state.userProfileModel!.id,
+                                    //     name: state.userProfileModel!.name,
+                                    //     email: state.userProfileModel!.email,
+                                    //     role: state.userProfileModel!.role,
+                                    //     githubId:
+                                    //         state.userProfileModel!.githubId,
+                                    //     emailVerified: state
+                                    //         .userProfileModel!.emailVerified,
+                                    //     isActive:
+                                    //         state.userProfileModel!.isActive,
+                                    //     skills: state.userProfileModel!.skills,
+                                    //     finishedTracks: state
+                                    //         .userProfileModel!.finishedTracks,
+                                    //     trackFinished: state
+                                    //         .userProfileModel!.trackFinished,
+                                    //     createdAt:
+                                    //         state.userProfileModel!.createdAt,
+                                    //     updatedAt:
+                                    //         state.userProfileModel!.updatedAt,
+                                    //   ),
+                                    // );
                                     final userProfile = state.userProfileModel;
                                     return UserItemWidget(
                                       user: UserDataEntity(
@@ -599,15 +624,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                     );
                                   }
                                 },
-                                child: SecondaryGradientButtonWidget(
-                                  icon: Icons.camera_alt_outlined,
-                                  title: S.of(context).profile_page_button2,
-                                  onPressed: () async {
-                                    await profileCubit.uploadUserProfileImage(
-                                      profileCubit.pickedUserProfileImage ??
-                                          profileCubit.userProfileImage,
-                                    );
-                                  },
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 16.r),
+                                  child: SecondaryGradientButtonWidget(
+                                    icon: Icons.camera_alt_outlined,
+                                    title: S.of(context).profile_page_button2,
+                                    onPressed: () async {
+                                      await profileCubit.uploadUserProfileImage(
+                                        profileCubit.pickedUserProfileImage ??
+                                            profileCubit.userProfileImage,
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                               SizedBox(height: size.height * 0.02),
@@ -615,6 +644,49 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ],
                       ),
+                    ),
+                    SizedBox(height: size.height * 0.04),
+                    BlocBuilder<ProfileCubit, ProfileState>(
+                      bloc: profileCubit,
+                      buildWhen: (previous, current) =>
+                          current is ProfileLoaded,
+                      builder: (context, state) {
+                        if (state is ProfileLoaded) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            child: Column(
+                              children: [
+                                state.userDataResponseEntity
+                                        .user.finishedTracks.isEmpty
+                                    ? const SizedBox.shrink()
+                                    : Column(
+                                        children: [
+                                          FinishedTracksWidget(
+                                            userDataResponseEntity:
+                                                state.userDataResponseEntity,
+                                          ),
+                                          SizedBox(height: size.height * 0.02),
+                                        ],
+                                      ),
+                                state.userDataResponseEntity.user.skills.isEmpty &&
+                                        isLoading == false
+                                    ? const SizedBox.shrink()
+                                    : Column(
+                                        children: [
+                                          FinishedSkillsWidget(
+                                            userDataResponseEntity:
+                                                state.userDataResponseEntity,
+                                          ),
+                                          SizedBox(height: size.height * 0.02),
+                                        ],
+                                      ),
+                              ],
+                            ),
+                          );
+                        }else {
+                          return const SizedBox.shrink();
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -624,194 +696,5 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
-    // );
-    // appBar: AppBar(
-    // actions: [
-    //   BlocListener<ProfileCubit, ProfileState>(
-    //     bloc: profileCubit,
-    //     listenWhen: (previous, current) =>
-    //         current is LogoutLoading ||
-    //         current is LogoutSuccess ||
-    //         current is LogoutError,
-    //     listener: (context, state) {
-    //       if (state is LogoutLoading) {
-    //         AppDialogs.showLoadingDialog(
-    //           context,
-    //           title: 'Logging out...',
-    //         );
-    //       } else {
-    //         Navigator.of(context, rootNavigator: true).pop();
-    //       }
-    //       if (state is LogoutSuccess) {
-    //         Navigator.pushNamedAndRemoveUntil(
-    //           context,
-    //           AppRoutes.login,
-    //           (route) => false,
-    //         );
-    //       } else if (state is LogoutError) {
-    //         AppToast.showToast(
-    //           context: context,
-    //           title: 'Error',
-    //           description: state.message,
-    //           type: ToastificationType.error,
-    //         );
-    //       }
-    //     },
-    //     child: InkWell(
-    //       onTap: () async {
-    //         await profileCubit.logout();
-    //       },
-    //       splashFactory: NoSplash.splashFactory,
-    //       child: Container(
-    //         padding: EdgeInsets.only(left: 16, top: 2, bottom: 2),
-    //         decoration: BoxDecoration(
-    //           color: AppColors.gray.withAlpha(60),
-    //           borderRadius: BorderRadius.circular(16),
-    //         ),
-    //         child: Row(
-    //           spacing: 8,
-    //           children: [
-    //             Text(
-    //               'Logout',
-    //               style: TextStyle(
-    //                 fontSize: 16,
-    //                 color: AppColors.red,
-    //                 fontWeight: FontWeight.w500,
-    //               ),
-    //             ),
-    //             SvgPicture.asset(
-    //               AppAssets.signinIcon,
-    //               colorFilter: ColorFilter.mode(
-    //                 AppColors.red,
-    //                 BlendMode.srcIn,
-    //               ),
-    //             ),
-    //             SizedBox(width: size.width * 0.01),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // ],
-    // ),
-    // body: Padding(
-    //   padding: EdgeInsets.symmetric(horizontal: 16),
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       SizedBox(width: size.width),
-    //       SizedBox(height: size.height * 0.06),
-    // BlocConsumer<ProfileCubit, ProfileState>(
-    //   bloc: profileCubit,
-    //   listenWhen: (previous, current) =>
-    //       current is UploadUserProfileImageError,
-    //   listener: (context, state) {
-    //     if (state is UploadUserProfileImageError) {
-    //       AppToast.showToast(
-    //         context: context,
-    //         title: 'Error',
-    //         description: state.message,
-    //         type: ToastificationType.error,
-    //       );
-    //     }
-    //   },
-    //   builder: (context, state) {
-    //     final userProfileImageUrl = profileCubit.userProfileImageUrl;
-    //     final userProfileImageLoaded =
-    //         profileCubit.userProfileImageLoaded;
-    //     return Stack(
-    //       children: [
-    //         CircleAvatar(
-    //           radius: size.width * 0.3,
-    //           backgroundColor: AppColors.dividerColor.withAlpha(150),
-    //           backgroundImage: userProfileImageUrl != null
-    //               ? NetworkImage(userProfileImageUrl)
-    //               : userProfileImageLoaded != null
-    //               ? NetworkImage(userProfileImageLoaded)
-    //               : null,
-    //         ),
-    //         Positioned(
-    //           bottom: 0,
-    //           right: 0,
-    //           child: CircleAvatar(
-    //             radius: size.width * 0.06,
-    //             backgroundColor: AppColors.blue,
-    //             child: IconButton(
-    //               onPressed: () async {
-    //                 await profileCubit.pickUserProfileImage();
-    //               },
-    //               icon: Icon(Icons.edit, color: AppColors.fillColor),
-    //             ),
-    //           ),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // ),
-    //       SizedBox(height: size.height * 0.06),
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: [
-    //           Text(
-    //             'Dark Mode',
-    //             style: TextStyle(
-    //               fontSize: 16,
-    //               color: AppColors.blue,
-    //               fontWeight: FontWeight.w600,
-    //             ),
-    //           ),
-    //           Switch(
-    //             value: isDarkMode,
-    //             activeThumbColor: AppColors.blue,
-    //             activeTrackColor: AppColors.blue.withAlpha(130),
-    //             inactiveTrackColor: AppColors.dividerColor.withAlpha(200),
-    //             inactiveThumbColor: AppColors.fillColor,
-    //             onChanged: (value) {
-    //               setState(() {
-    //                 isDarkMode = value;
-    //               });
-    //             },
-    //           ),
-    //         ],
-    //       ),
-    //     BlocConsumer<ProfileCubit, ProfileState>(
-    //       bloc: profileCubit,
-    //       listenWhen: (previous, current) =>
-    //           current is ProfileLoading || current is ProfileError,
-    //       buildWhen: (previous, current) => current is ProfileLoaded,
-    //       listener: (context, state) {
-    //         if (state is ProfileLoading) {
-    //           AppDialogs.showLoadingDialog(
-    //             context,
-    //             title: 'Loading profile...',
-    //           );
-    //         }
-    //         if (state is ProfileError) {
-    //           Navigator.of(context).pop();
-    //           AppToast.showToast(
-    //             context: context,
-    //             title: 'Error',
-    //             description: state.message,
-    //             type: ToastificationType.error,
-    //           );
-    //         }
-    //       },
-    //       builder: (context, state) {
-    //         if (state is ProfileLoaded) {
-    //           final user = state.userDataResponseEntity.user;
-    //           return UserItemWidget(
-    //             name: user.name,
-    //             email: user.email,
-    //             role: user.role,
-    //           );
-    //         } else {
-    //           return const SizedBox.shrink();
-    //         }
-    //       },
-    //     ),
-    //   ],
-    // ),
-    // ),
-    // );
   }
 }

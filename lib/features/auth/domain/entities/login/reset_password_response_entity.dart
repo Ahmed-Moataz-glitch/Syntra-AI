@@ -1,42 +1,19 @@
 class ResetPasswordResponseEntity {
   bool success;
   String token;
-  UserResetPasswordEntity user;
+  ResetPasswordUserEntity user;
+  String message;
 
-  ResetPasswordResponseEntity({
-    this.success = false,
-    this.token = '',
-    this.user = const UserResetPasswordEntity(
-      id: '',
-      name: '',
-      email: '',
-      avatar: '',
-      role: '',
-      githubId: '',
-      isActive: false,
-      emailVerified: false,
-    ),
-  });
+  ResetPasswordResponseEntity(
+      {this.success = false, this.token = '', this.user = const ResetPasswordUserEntity(), this.message = ''});
 }
 
-class UserResetPasswordEntity {
+class ResetPasswordUserEntity {
   final String id;
   final String name;
   final String email;
   final String avatar;
   final String role;
-  final String githubId;
-  final bool isActive;
-  final bool emailVerified;
 
-  const UserResetPasswordEntity({
-    this.id = '',
-    this.name = '',
-    this.email = '',
-    this.avatar = '',
-    this.role = '',
-    this.githubId = '',
-    this.isActive = false,
-    this.emailVerified = false,
-  });
+  const ResetPasswordUserEntity({this.id = '', this.name = '', this.email = '', this.avatar = '', this.role = ''});
 }

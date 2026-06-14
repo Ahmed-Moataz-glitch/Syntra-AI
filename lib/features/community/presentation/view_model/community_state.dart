@@ -4,15 +4,16 @@ sealed class CommunityState {}
 
 final class CommunityInitial extends CommunityState {}
 
-final class CommunityLoading extends CommunityState {}
-final class CommunityLoaded extends CommunityState {
+final class GetUsersFinishedTracksLoading extends CommunityState {}
 
-  CommunityLoaded();
+final class GetUsersFinishedTracksSuccess extends CommunityState {
+  final GetUsersFinishedTracksResponseEntity
+      getUsersFinishedTracksResponseEntity;
+  GetUsersFinishedTracksSuccess(this.getUsersFinishedTracksResponseEntity);
 }
 
-final class CommunityError extends CommunityState {
+final class GetUsersFinishedTracksError extends CommunityState {
   final String message;
 
-  CommunityError(this.message);
+  GetUsersFinishedTracksError(this.message);
 }
-

@@ -17,8 +17,8 @@ class ProfileRepoImpl implements ProfileRepo {
   }
 
   @override
-  Future<ApiResult<LogoutResponseEntity>> logout() {
-    return _profileDataSource.logout();
+  Future<ApiResult<LogoutResponseEntity>> logout(String userId) {
+    return _profileDataSource.logout(userId);
   }
 
   @override

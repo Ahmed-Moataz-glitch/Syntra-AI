@@ -9,6 +9,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final TextInputType keyboardType;
   final String? hintText;
   bool obscureText;
+  final bool isEmail;
   final bool isPassword;
   final bool isFullName;
   final TextEditingController controller;
@@ -20,6 +21,7 @@ class TextFormFieldWidget extends StatefulWidget {
     this.hintText,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
+    this.isEmail = false,
     this.isPassword = false,
     this.isFullName = false,
     super.key,
@@ -34,46 +36,54 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   Widget build(BuildContext context) {
     final isLightMode = Theme.of(context).brightness == Brightness.light;
     return TextFormField(
+      maxLines: widget.hintText!.contains('This app') ? 5 : 1,
+      onChanged: (value) => widget.controller.text = value,
       obscureText: widget.obscureText,
       obscuringCharacter: '*',
       style: Theme.of(context).inputDecorationTheme.hintStyle!.copyWith(
-        fontSize: isLightMode ? 16.sp : 16.sp,
-        color: isLightMode ? AppColors.blue : AppColors.blue,
-        fontWeight: isLightMode ? FontWeight.w700 : FontWeight.w700,
-      ),
+            fontSize: isLightMode ? 16.sp : 16.sp,
+            color: isLightMode ? AppColors.blue : AppColors.blue,
+            fontWeight: isLightMode ? FontWeight.w700 : FontWeight.w700,
+          ),
       cursorColor: AppColors.blue,
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       decoration: InputDecoration(
-        fillColor: isLightMode ? null : AppColors.primary,
+        fillColor: isLightMode ? AppColors.blue.withAlpha(35) : AppColors.primary,
         hintText: widget.hintText,
         hintStyle: Theme.of(context).inputDecorationTheme.hintStyle!.copyWith(
-          color: isLightMode ? null : AppColors.black,
-        ),
+              color: isLightMode ? null : AppColors.black,
+            ),
         prefixIcon: widget.isPassword
             ? Padding(
                 padding: EdgeInsets.all(8.r),
                 child: SvgPicture.asset(
                   AppAssets.passwordIcon,
                   colorFilter: ColorFilter.mode(
-                    isLightMode ? AppColors.black.withAlpha(190) : AppColors.black.withAlpha(190),
+                    isLightMode
+                        ? AppColors.black.withAlpha(190)
+                        : AppColors.black.withAlpha(190),
                     BlendMode.srcIn,
                   ),
                 ),
               )
-            : widget.isFullName ? Padding(
-                padding: EdgeInsets.all(8.r),
-                child: Icon(
-                  Icons.person_outline, 
-                  size: 32.sp,
-                  color: isLightMode ? null : AppColors.black.withAlpha(190),
-                ),
-              )
-            : Padding(
-                padding: EdgeInsets.all(8.r),
-                child: SvgPicture.asset(
-                  AppAssets.emailIcon,
-                  ),
-              ),
+            : widget.isFullName
+                ? Padding(
+                    padding: EdgeInsets.all(8.r),
+                    child: Icon(
+                      Icons.person_outline,
+                      size: 32.sp,
+                      color:
+                          isLightMode ? null : AppColors.black.withAlpha(190),
+                    ),
+                  )
+                : widget.isEmail
+                    ? Padding(
+                        padding: EdgeInsets.all(8.r),
+                        child: SvgPicture.asset(
+                          AppAssets.emailIcon,
+                        ),
+                      )
+                    : null,
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
@@ -90,16 +100,18 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             : null,
 
         // contentPadding: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 8),
-        enabledBorder: outlineInputBorder(
-          color: AppColors.dividerColor,
-          radius: 10,
-          width: 1.4,
+        enabledBorder: isLightMode
+            ? outlineInputBorder(
+                color: AppColors.secondary.withAlpha(150),
+                radius: 10.r,
+                width: 1.2.r,
+              )
+            : null,
+        focusedBorder: outlineInputBorder(
+          color: AppColors.blue.withAlpha(200),
+          radius: 10.r,
+          width: 1.5.r,
         ),
-        // focusedBorder: outlineInputBorder(
-        //   color: Color(0xff5F33E1),
-        //   radius: 10,
-        //   width: 1,
-        // ),
         // errorBorder: outlineInputBorder(
         //   color: Colors.red,
         //   radius: 10,
@@ -124,7 +136,11 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   }) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(radius),
-      borderSide: BorderSide(color: color, width: width),
+      borderSide: BorderSide(
+        color: color, 
+        width: width,
+        strokeAlign: BorderSide.strokeAlignOutside,
+      ),
     );
   }
 }

@@ -1,5 +1,7 @@
 // ignore_for_file: override_on_non_overriding_member
 import 'package:syntra_ai/features/auth/data/api/api_result.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_request_entity.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/reset_password_request_entity.dart';
@@ -62,5 +64,10 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<void> saveUserProfile(UserProfileModel userProfileModel) {
     return _authDataSource.saveUserProfile(userProfileModel);
+  }
+
+  @override
+  Future<ApiResult<ForgetPasswordResponseEntity>> forgetPassword(ForgetPasswordRequestEntity forgetPasswordRequestEntity) {
+    return _authDataSource.forgetPassword(forgetPasswordRequestEntity);
   }
 }

@@ -13,16 +13,16 @@ import 'package:syntra_ai/features/auth/data/repo/repo/auth_repo_impl.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/repo/data_source/auth_data_source.dart';
 import 'package:syntra_ai/features/auth/domain/repo/repo/auth_repo.dart';
+import 'package:syntra_ai/features/auth/domain/use_case/forget_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_email_and_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_github_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_google_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/register_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/reset_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/save_user_profile_use_case.dart';
-import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_existing_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_new_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/validate_otp_use_case.dart';
-import 'package:syntra_ai/features/auth/presentation/view/widgets/gradient_button_widget.dart';
+import 'package:syntra_ai/core/view/widgets/gradient_button_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/login_method_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/text_form_field_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/validator.dart';
@@ -49,7 +49,8 @@ class _LoginPageState extends State<LoginPage> {
     AuthApi authApi = AuthApi();
     AuthDataSource authDataSource = AuthDataSourceImpl(authApi);
     AuthRepo authRepo = AuthRepoImpl(authDataSource);
-    SaveUserProfileUseCase saveUserProfileUseCase = SaveUserProfileUseCase(authRepo);
+    SaveUserProfileUseCase saveUserProfileUseCase =
+        SaveUserProfileUseCase(authRepo);
     LoginWithEmailAndPasswordUseCase loginWithEmailAndPasswordUseCase =
         LoginWithEmailAndPasswordUseCase(authRepo);
     RegisterUseCase registerUseCase = RegisterUseCase(authRepo);
@@ -61,9 +62,10 @@ class _LoginPageState extends State<LoginPage> {
     );
     SendOtpForNewUserUseCase sendOtpForNewUserUseCase =
         SendOtpForNewUserUseCase(authRepo);
-    SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase =
-        SendOtpForExistingUserUseCase(authRepo);
+    // SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase =
+    //     SendOtpForExistingUserUseCase(authRepo);
     ValidateOtpUseCase validateOtpUseCase = ValidateOtpUseCase(authRepo);
+    ForgetPasswordUseCase forgetPasswordUseCase = ForgetPasswordUseCase(authRepo);
     ResetPasswordUseCase resetPasswordUseCase = ResetPasswordUseCase(authRepo);
     authCubit = AuthCubit(
       saveUserProfileUseCase: saveUserProfileUseCase,
@@ -72,8 +74,9 @@ class _LoginPageState extends State<LoginPage> {
       loginWithGoogleUseCase: loginWithGoogleUseCase,
       loginWithGithubUseCase: loginWithGithubUseCase,
       sendOtpForNewUserUseCase: sendOtpForNewUserUseCase,
-      sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
+      // sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
       validateOtpUseCase: validateOtpUseCase,
+      forgetPasswordUseCase: forgetPasswordUseCase,
       resetPasswordUseCase: resetPasswordUseCase,
     );
     emailController = TextEditingController();
@@ -108,14 +111,15 @@ class _LoginPageState extends State<LoginPage> {
         bloc: authCubit,
         listenWhen: (previous, current) =>
             current is AuthLoading ||
-            current is AuthSuccess ||
-            current is AuthError ||
+            current is LoginSuccess ||
+            current is LoginError ||
             current is SaveUserProfileError,
         listener: (context, state) {
           if (state is AuthLoading) {
-            AppDialogs.showLoadingDialog(context, title: S.of(context).loading_dialog_login);
+            AppDialogs.showLoadingDialog(context,
+                title: S.of(context).loading_dialog_login);
           }
-          if (state is AuthError) {
+          if (state is LoginError) {
             Navigator.of(context).pop();
             AppToast.showToast(
               context: context,
@@ -124,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
               type: ToastificationType.error,
             );
           }
-          if(state is SaveUserProfileError) {
+          if (state is SaveUserProfileError) {
             AppToast.showToast(
               context: context,
               title: S.of(context).app_toast_error,
@@ -132,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
               type: ToastificationType.error,
             );
           }
-          if (state is AuthSuccess) {
+          if (state is LoginSuccess) {
             // AppToast.showToast(
             //   context: context,
             //   title: "Success",
@@ -170,9 +174,11 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   S.of(context).login_title2,
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                    fontSize: 16.sp,    
-                    color: isLightMode ? null : AppColors.primary.withAlpha(150),
-                  ),
+                        fontSize: 16.sp,
+                        color: isLightMode
+                            ? null
+                            : AppColors.primary.withAlpha(150),
+                      ),
                   // style: TextStyle(
                   //   fontSize: 16.sp,
                   //   fontWeight: FontWeight.w500,
@@ -188,9 +194,11 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         S.of(context).login_email,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontSize: 18.sp,
-                          color: isLightMode ? null : AppColors.primary.withAlpha(220),
-                        ),
+                              fontSize: 18.sp,
+                              color: isLightMode
+                                  ? null
+                                  : AppColors.primary.withAlpha(220),
+                            ),
                         // style: TextStyle(
                         //   fontSize: 18.sp,
                         //   fontWeight: FontWeight.w500,
@@ -200,6 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: size.height * 0.01),
                       TextFormFieldWidget(
                         controller: emailController,
+                        isEmail: true,
                         validator: Validator.validateEmail,
                         hintText: S.of(context).login_email_hint_text,
                       ),
@@ -207,9 +216,11 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         S.of(context).login_password,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontSize: 18.sp,
-                          color: isLightMode ? null : AppColors.primary.withAlpha(220),
-                        ),
+                              fontSize: 18.sp,
+                              color: isLightMode
+                                  ? null
+                                  : AppColors.primary.withAlpha(220),
+                            ),
                         // style: TextStyle(
                         //   fontSize: 18.sp,
                         //   fontWeight: FontWeight.w500,
@@ -266,7 +277,9 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Expanded(
                       child: Divider(
-                        color: isLightMode ? AppColors.primary.withAlpha(160) : AppColors.primary.withAlpha(150),
+                        color: isLightMode
+                            ? AppColors.secondary.withAlpha(150)
+                            : AppColors.primary.withAlpha(150),
                         // color: AppColors.dividerColor,
                         // thickness: 1,
                         // height: 32.h,
@@ -277,8 +290,10 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       S.of(context).login_title3,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: isLightMode ? null : AppColors.primary.withAlpha(200),
-                      ),
+                            color: isLightMode
+                                ? null
+                                : AppColors.primary.withAlpha(200),
+                          ),
                       // style: TextStyle(
                       //   fontSize: 14.sp,
                       //   fontWeight: FontWeight.w500,
@@ -287,7 +302,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Expanded(
                       child: Divider(
-                        color: isLightMode ? AppColors.primary.withAlpha(160) : AppColors.primary.withAlpha(150),
+                        color: isLightMode
+                            ? AppColors.secondary.withAlpha(150)
+                            : AppColors.primary.withAlpha(150),
                         // color: AppColors.dividerColor,
                         // thickness: 1,
                         // height: 32.h,
@@ -300,10 +317,11 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: size.height * 0.02),
                 BlocListener<AuthCubit, AuthState>(
                   bloc: authCubit,
-                  listenWhen: (previous, current) => current is LoginWithOtherMethodError ||
+                  listenWhen: (previous, current) =>
+                      current is LoginWithOtherMethodError ||
                       current is LoginWithOtherMethodSuccess,
                   listener: (context, state) {
-                    if(state is LoginWithOtherMethodError) {
+                    if (state is LoginWithOtherMethodError) {
                       AppToast.showToast(
                         context: context,
                         title: S.of(context).app_toast_error,
@@ -311,7 +329,7 @@ class _LoginPageState extends State<LoginPage> {
                         type: ToastificationType.error,
                       );
                     }
-                    if(state is LoginWithOtherMethodSuccess) {
+                    if (state is LoginWithOtherMethodSuccess) {
                       // AppToast.showToast(
                       //   context: context,
                       //   title: "Success",
@@ -321,7 +339,8 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.of(
                         context,
                         rootNavigator: true,
-                      ).pushNamedAndRemoveUntil(AppRoutes.appSection, (route) => false);
+                      ).pushNamedAndRemoveUntil(
+                          AppRoutes.appSection, (route) => false);
                     }
                   },
                   child: Row(

@@ -19,8 +19,14 @@ class UserProfileModel extends HiveObject {
   @HiveField(6)
   final bool isActive;
   @HiveField(7)
-  final String createdAt;
+  final List<String> skills;
   @HiveField(8)
+  final List<String> finishedTracks;
+  @HiveField(9)
+  final bool trackFinished;
+  @HiveField(10)
+  final String createdAt;
+  @HiveField(11)
   final String updatedAt;
 
   UserProfileModel({
@@ -31,6 +37,9 @@ class UserProfileModel extends HiveObject {
     required this.githubId,
     required this.emailVerified,
     required this.isActive,
+    required this.skills,
+    required this.finishedTracks,
+    required this.trackFinished,
     required this.createdAt,
     required this.updatedAt,
   });

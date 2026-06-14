@@ -1,4 +1,6 @@
 import 'package:syntra_ai/features/auth/data/api/api_result.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_request_entity.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/reset_password_request_entity.dart';
@@ -28,6 +30,10 @@ abstract class AuthRepo {
 
   Future<bool> validateOtp({required String email, required String otp});
 
+  Future<ApiResult<ForgetPasswordResponseEntity>> forgetPassword(
+    ForgetPasswordRequestEntity forgetPasswordRequestEntity,
+  );
+  
   Future<ApiResult<ResetPasswordResponseEntity>> resetPassword(
     ResetPasswordRequestEntity resetPasswordRequestEntity,
   );

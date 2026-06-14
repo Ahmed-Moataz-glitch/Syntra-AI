@@ -6,10 +6,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syntra_ai/core/utils/app_api.dart';
+import 'package:syntra_ai/core/utils/app_colors.dart';
 import 'package:syntra_ai/core/utils/app_routes.dart';
 import 'package:syntra_ai/core/utils/app_theme.dart';
 import 'package:syntra_ai/core/utils/secure_storage.dart';
@@ -26,7 +28,17 @@ import 'package:syntra_ai/features/auth/presentation/view/pages/verify_code_page
 import 'package:syntra_ai/features/auth/presentation/view/pages/verify_email_page.dart';
 import 'package:syntra_ai/features/community/presentation/view/pages/community_page.dart';
 import 'package:syntra_ai/features/home/presentation/view/pages/home_page.dart';
-import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page.dart';
+import 'package:syntra_ai/features/home/presentation/view/pages/roles_page.dart';
+import 'package:syntra_ai/features/home/presentation/view/pages/work_flow_page.dart';
+import 'package:syntra_ai/features/learn/data/model/user_roadmap_model.dart';
+import 'package:syntra_ai/features/learn/domain/entities/generate_roadmap_response_entity.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page_for_learner.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/learning_project_page.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/questions_page.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/roadmap_page.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/suggested_track_page.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/week_quiz_page.dart';
+import 'package:syntra_ai/features/learn/presentation/view_model/learn_cubit.dart';
 import 'package:syntra_ai/features/profile/data/model/user_profile_model.dart';
 import 'package:syntra_ai/features/profile/presentation/view/pages/profile_page.dart';
 import 'package:syntra_ai/firebase_options.dart';
@@ -43,7 +55,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(UserProfileModelAdapter());
+  Hive.registerAdapter(UserRoadmapModelAdapter());
+  Hive.registerAdapter(RoadmapModelAdapter());
+  Hive.registerAdapter(SkillsModelAdapter());
+  Hive.registerAdapter(ResourcesModelAdapter());
   await Hive.openBox<UserProfileModel>(AppApi.userProfileBox);
+  await Hive.openBox<UserRoadmapModel>(AppApi.userRoadmapBox);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // FirebaseCrashlytics.instance.crash();
   await Supabase.initialize(
@@ -155,6 +172,41 @@ class MyApp extends StatelessWidget {
                 builder: (context, state) {
                   final themeCubit = ThemeCubit.get(context);
                   return MaterialApp(
+                    builder: (context, child) {
+                      return OfflineBuilder(
+                        child: child!,
+                        connectivityBuilder: (context, connectivity, child) {
+                          final connected =
+                              !connectivity.contains(ConnectivityResult.none);
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              child,
+                              if (!connected)
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Material(
+                                    color: AppColors.red.withAlpha(220),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.r),
+                                      child: Text(
+                                        'No internet connection',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     locale: Locale(languageCubit.getLanguage()),
                     localizationsDelegates: const [
                       S.delegate,
@@ -211,8 +263,14 @@ class MyApp extends StatelessWidget {
                             builder: (context) => VerifyCodePage(email: email),
                           );
                         case AppRoutes.resetPassword:
+                          final args = settings.arguments as Map<String, dynamic>;
+                          final email = args['email'] as String;
+                          final otp = args['otp'] as String;
                           return MaterialPageRoute(
-                            builder: (context) => const ResetPasswordPage(),
+                            builder: (context) => ResetPasswordPage(
+                              email: email,
+                              otp: otp,
+                            ),
                           );
                         case AppRoutes.successfulResetPassword:
                           return MaterialPageRoute(
@@ -222,6 +280,66 @@ class MyApp extends StatelessWidget {
                         case AppRoutes.appSection:
                           return MaterialPageRoute(
                             builder: (context) => const AppSection(),
+                          );
+                        case AppRoutes.workFlow:
+                          return MaterialPageRoute(
+                            builder: (context) => const WorkFlowPage(),
+                          );
+                        case AppRoutes.roles:
+                          return MaterialPageRoute(
+                            builder: (context) => const RolesPage(),
+                          );
+                        case AppRoutes.questions:
+                          final learnCubit = settings.arguments as LearnCubit;
+                          return MaterialPageRoute(
+                            builder: (context) =>
+                                QuestionsPage(learnCubit: learnCubit),
+                          );
+                        case AppRoutes.suggestedTrack:
+                          final args =
+                              settings.arguments as Map<String, dynamic>;
+                          final learnCubit = args['learnCubit'] as LearnCubit;
+                          final suggestedTrack =
+                              args['suggestedTrack'] as String;
+                          return MaterialPageRoute(
+                            builder: (context) => SuggestedTrackPage(
+                                learnCubit: learnCubit,
+                                suggestedTrack: suggestedTrack),
+                          );
+                        case AppRoutes.roadmap:
+                          final args =
+                              settings.arguments as Map<String, dynamic>;
+                          final learnCubit = args['learnCubit'] as LearnCubit;
+                          final generateRoadmapResponseEntity =
+                              args['generateRoadmapResponseEntity']
+                                  as GenerateRoadmapResponseEntity;                          return MaterialPageRoute(
+                            builder: (context) => RoadmapPage(
+                              learnCubit: learnCubit,
+                              generateRoadmapResponseEntity:
+                                  generateRoadmapResponseEntity,
+                            ),
+                          );
+                        case AppRoutes.learningProject:
+                          final args =
+                              settings.arguments as Map<String, dynamic>;
+                          final learnCubit = args['learnCubit'] as LearnCubit;
+                          final generateRoadmapResponseEntity =
+                              args['generateRoadmapResponseEntity']
+                                  as GenerateRoadmapResponseEntity;
+                          return MaterialPageRoute(
+                            builder: (context) => LearningProjectPage(
+                              learnCubit: learnCubit,
+                              generateRoadmapResponseEntity:
+                                  generateRoadmapResponseEntity,
+                            ),
+                          );
+                        case AppRoutes.weekQuiz:
+                          final generateRoadmapResponseEntity = settings
+                              .arguments as GenerateRoadmapResponseEntity;
+                          return MaterialPageRoute(
+                            builder: (context) => WeekQuizPage(
+                                generateRoadmapResponseEntity:
+                                    generateRoadmapResponseEntity),
                           );
                         default:
                           return null;
@@ -235,7 +353,7 @@ class MyApp extends StatelessWidget {
                           );
                         case AppRoutes.learn:
                           return MaterialPageRoute(
-                            builder: (context) => const LearnPage(),
+                            builder: (context) => const LearnPageForLearner(),
                           );
                         case AppRoutes.community:
                           return MaterialPageRoute(

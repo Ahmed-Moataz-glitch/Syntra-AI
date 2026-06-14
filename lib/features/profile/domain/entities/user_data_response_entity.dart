@@ -2,18 +2,7 @@ class UserDataResponseEntity {
   bool success;
   UserDataEntity user;
 
-  UserDataResponseEntity({this.success = false, this.user = const UserDataEntity(
-    id: '',
-    name: '',
-    email: '',
-    avatar: '',
-    role: '',
-    githubId: '',
-    isActive: false,
-    emailVerified: false,
-    createdAt: '',
-    updatedAt: '',
-  )});
+  UserDataResponseEntity({this.success = false, this.user = const UserDataEntity()});
 }
 
 class UserDataEntity {
@@ -25,6 +14,9 @@ class UserDataEntity {
   final String githubId;
   final bool isActive;
   final bool emailVerified;
+  final List<String> skills;
+  final List<String> finishedTracks;
+  final bool trackFinished;
   final String createdAt;
   final String updatedAt;
 
@@ -35,9 +27,11 @@ class UserDataEntity {
       this.avatar = '',
       this.role = '',
       this.githubId = '',
-      this.isActive = false ,
+      this.isActive = false,
       this.emailVerified = false,
+      this.skills = const [],
+      this.finishedTracks = const [],
+      this.trackFinished = false,
       this.createdAt = '',
-      this.updatedAt = '',
-    });
+      this.updatedAt = ''});
 }

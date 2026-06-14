@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syntra_ai/core/utils/app_assets.dart';
 import 'package:syntra_ai/core/utils/app_colors.dart';
 import 'package:syntra_ai/core/utils/app_routes.dart';
-import 'package:syntra_ai/features/auth/presentation/view/widgets/gradient_button_widget.dart';
+import 'package:syntra_ai/core/view/widgets/gradient_button_widget.dart';
 import 'package:syntra_ai/generated/l10n.dart';
 
 class SuccessfulResetPasswordPage extends StatelessWidget {

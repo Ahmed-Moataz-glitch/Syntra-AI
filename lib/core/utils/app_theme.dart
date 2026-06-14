@@ -4,7 +4,7 @@ import 'package:syntra_ai/core/utils/app_colors.dart';
 
 abstract class AppTheme {
   static ThemeData light = ThemeData(
-    scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor,
+    scaffoldBackgroundColor: AppColors.primary,
     primaryColor: AppColors.blue,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.transparent,

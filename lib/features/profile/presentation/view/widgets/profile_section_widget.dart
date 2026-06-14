@@ -31,8 +31,8 @@ class ProfileSectionWidget extends StatelessWidget {
                   AppColors.blue.withAlpha(50),
                   AppColors.onboardingColor.withAlpha(130),
                 ] : [
-                  AppColors.blue.withAlpha(150),
-                  AppColors.purple.withAlpha(150),
+                  AppColors.blue.withAlpha(160),
+                  AppColors.purple.withAlpha(130),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -51,27 +51,19 @@ class ProfileSectionWidget extends StatelessWidget {
                 title,
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                   fontSize: 16.sp,
-                  color: isLightMode ? null : AppColors.primary.withAlpha(120),
+                  fontWeight: isLightMode ? null : FontWeight.w700,
+                  color: isLightMode ? null : AppColors.black.withAlpha(120),
                 ),
-                // style: TextStyle(
-                //   fontSize: 16.sp,
-                //   color: AppColors.secondary,
-                //   fontWeight: FontWeight.w600,
-                // ),
               ),
               Text(
                 title == S.of(context).profile_page_title7 && value == '' ? S.of(context).profile_page_title7_value : value,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: isLightMode ? null : AppColors.black,
                   fontSize: 16.sp,
                   fontWeight: isLightMode ? FontWeight.w700 : FontWeight.w600,
                 ),
-                // style: TextStyle(
-                //   fontSize: 15.sp,
-                //   color: AppColors.black.withAlpha(220),
-                //   fontWeight: FontWeight.w700,
-                // ),
               ),
             ],
           ),

@@ -12,4 +12,11 @@ abstract class AppRoutes {
   static const String learn = '/learn';
   static const String community = '/community';
   static const String profile = '/profile';
+  static const String workFlow = '/work-flow';
+  static const String roles = '/roles';
+  static const String questions = '/questions';
+  static const String suggestedTrack = '/suggested-track';
+  static const String roadmap = '/roadmap';
+  static const String weekQuiz = '/week-quiz';
+  static const String learningProject = '/learning-project';
 }

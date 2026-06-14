@@ -9,6 +9,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syntra_ai/core/utils/app_api.dart';
 import 'package:syntra_ai/core/utils/secure_storage.dart';
 import 'package:syntra_ai/features/auth/data/api/api_result.dart';
+import 'package:syntra_ai/features/auth/data/model/login/forget_password_request_dto.dart';
+import 'package:syntra_ai/features/auth/data/model/login/forget_password_response_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/login/login_request_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/login/login_response_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/login/reset_password_request_dto.dart';
@@ -29,10 +31,17 @@ class AuthApi {
   Future<ApiResult<LoginResponseDto>> loginWithEmailAndPassword(
     LoginRequestDto loginRequestDto,
   ) async {
-    var url = Uri.https(AppApi.host, AppApi.baseUrl + AppApi.loginEndpoint);
+    var url = Uri.https(AppApi.authHost, AppApi.baseUrl + AppApi.loginEndpoint);
 
     try {
-      var response = await http.post(url, body: loginRequestDto.toJson());
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(loginRequestDto.toJson()),
+      );
       var responseBody = response.body;
       var json = jsonDecode(responseBody);
       if (response.statusCode != 200) {
@@ -52,10 +61,14 @@ class AuthApi {
   Future<ApiResult<RegisterResponseDto>> register(
     RegisterRequestDto registerRequestDto,
   ) async {
-    var url = Uri.https(AppApi.host, AppApi.baseUrl + AppApi.registerEndpoint);
+    var url =
+        Uri.https(AppApi.authHost, AppApi.baseUrl + AppApi.registerEndpoint);
 
     try {
-      var response = await http.post(url, body: registerRequestDto.toJson());
+      var response = await http.post(
+        url, 
+        body: registerRequestDto.toJson(),
+      );
       var responseBody = response.body;
       var json = jsonDecode(responseBody);
       if (response.statusCode != 200) {
@@ -87,7 +100,7 @@ class AuthApi {
     // } catch (_) {
     //   return false;
     // }
-    var url = 'https://$AppApi.host${AppApi.baseUrl}${AppApi.googleEndpoint}';
+    var url = 'https://${AppApi.authHost}${AppApi.baseUrl}${AppApi.googleEndpoint}';
     try {
       final result = await FlutterWebAuth2.authenticate(
         url: url,
@@ -114,7 +127,8 @@ class AuthApi {
     // } else {
     //   return false;
     // }
-    var url = 'https://$AppApi.host${AppApi.baseUrl}${AppApi.gitHubEndpoint}';
+    var url =
+        'https://${AppApi.authHost}${AppApi.baseUrl}${AppApi.gitHubEndpoint}';
     try {
       final result = await FlutterWebAuth2.authenticate(
         url: url,
@@ -129,28 +143,32 @@ class AuthApi {
     }
   }
 
-  // Future<ApiResult<ForgetPasswordResponseDto>> forgetPassword(
-  //   ForgetPasswordRequestDto forgetPasswordRequestDto,
-  // ) async {
-  //   var url = Uri.https(
-  //     AppApi.host,
-  //     AppApi.baseUrl + AppApi.forgetPasswordEndpoint,
-  //   );
-
-  //   try {
-  //     var response = await http.post(
-  //       url,
-  //       body: forgetPasswordRequestDto.toJson(),
-  //     );
-  //     var responseBody = response.body;
-  //     var json = jsonDecode(responseBody);
-  //     return ApiSuccess<ForgetPasswordResponseDto>(
-  //       ForgetPasswordResponseDto.fromJson(json),
-  //     );
-  //   } catch (e) {
-  //     return ApiError<ForgetPasswordResponseDto>(e.toString());
-  //   }
-  // }
+  Future<ApiResult<ForgetPasswordResponseDto>> forgetPassword(
+    ForgetPasswordRequestDto forgetPasswordRequestDto,
+  ) async {
+    var url = Uri.https(
+      AppApi.authHost,
+      AppApi.baseUrl + AppApi.forgetPasswordEndpoint,
+    );
+    try {
+      var response = await http.post(
+        url,
+        body: forgetPasswordRequestDto.toJson(),
+      );
+      var responseBody = response.body;
+      if (response.statusCode != 200) {
+        return ApiError<ForgetPasswordResponseDto>(
+          'HTTP ${response.statusCode}: $responseBody',
+        );
+      }
+      var json = jsonDecode(responseBody);
+      return ApiSuccess<ForgetPasswordResponseDto>(
+        ForgetPasswordResponseDto.fromJson(json),
+      );
+    } catch (e) {
+      return ApiError<ForgetPasswordResponseDto>(e.toString());
+    }
+  }
 
   Future<void> sendOtpForNewUser(String email) async {
     try {
@@ -191,7 +209,7 @@ class AuthApi {
     ResetPasswordRequestDto resetPasswordRequestDto,
   ) async {
     var url = Uri.https(
-      AppApi.host,
+      AppApi.authHost,
       AppApi.baseUrl + AppApi.resetPasswordEndpoint,
     );
 
@@ -201,6 +219,11 @@ class AuthApi {
         body: resetPasswordRequestDto.toJson(),
       );
       var responseBody = response.body;
+      if(response.statusCode != 200) {
+        return ApiError<ResetPasswordResponseDto>(
+          'HTTP ${response.statusCode}: $responseBody',
+        );
+      }
       var json = jsonDecode(responseBody);
       return ApiSuccess<ResetPasswordResponseDto>(
         ResetPasswordResponseDto.fromJson(json),

@@ -64,14 +64,50 @@ final class LoginWithOtherMethodError extends AuthState {
   LoginWithOtherMethodError(this.message);
 }
 
-final class AuthSuccess extends AuthState {
+final class RegisterSuccess extends AuthState {
   final String message;
 
-  AuthSuccess(this.message);
+  RegisterSuccess(this.message);
 }
 
-final class AuthError extends AuthState {
+final class RegisterError extends AuthState {
   final String message;
 
-  AuthError(this.message);
+  RegisterError(this.message);
+}
+
+final class LoginSuccess extends AuthState {
+  final String message;
+
+  LoginSuccess(this.message);
+}
+
+final class LoginError extends AuthState {
+  final String message;
+
+  LoginError(this.message);
+}
+
+final class ForgetPasswordSuccess extends AuthState {
+  final String message;
+
+  ForgetPasswordSuccess(this.message);
+}
+
+final class ForgetPasswordError extends AuthState {
+  final String message;
+
+  ForgetPasswordError(this.message);
+}
+
+final class ResetPasswordSuccess extends AuthState {
+  final String message;
+
+  ResetPasswordSuccess(this.message);
+}
+
+final class ResetPasswordError extends AuthState {
+  final String message;
+
+  ResetPasswordError(this.message);
 }

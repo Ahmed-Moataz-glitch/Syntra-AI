@@ -42,9 +42,12 @@ class UserItemWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
             decoration: BoxDecoration(
               color: isLightMode
-                  ? AppColors.secondary.withAlpha(15)
-                  : Theme.of(context).primaryColor.withAlpha(20),
-              border: Border.all(color: AppColors.dividerColor, width: 1.4.r),
+                  ? AppColors.purple.withAlpha(25)
+                  : AppColors.primary,
+              border: Border.all(
+                color: AppColors.dividerColor, 
+                width: isLightMode ? 1.4.r : 0,
+              ),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Text(
@@ -68,15 +71,15 @@ class UserItemWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12.r),
             margin: EdgeInsets.symmetric(vertical: size.height * 0.02),
-            height: size.height * 0.68,
+            height: size.height * 0.7,
             width: size.width * 0.8,
             decoration: BoxDecoration(
               color: isLightMode
                   ? AppColors.secondary.withAlpha(15)
-                  : Theme.of(context).primaryColor.withAlpha(20),
+                  : AppColors.primary.withAlpha(240),
               border: Border.all(
                   color: AppColors.dividerColor,
-                  width: isLightMode ? 1.r : 0.4.r),
+                  width: isLightMode ? 1.2.r : 0.4.r),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(

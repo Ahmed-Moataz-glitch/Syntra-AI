@@ -36,7 +36,7 @@ class ProfileApi {
   ) async {
     final token = await SecureStorage.getToken();
     var url = Uri.https(
-      AppApi.host,
+      AppApi.authHost,
       AppApi.baseUrl + AppApi.uploadUserProfileImageEndpoint,
     );
     try {
@@ -53,11 +53,11 @@ class ProfileApi {
       var response = await request.send();
       var responseBody = await response.stream.bytesToString();
       var json = jsonDecode(responseBody);
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         return ApiSuccess<UploadUserProfileImageResponseDto>(
           UploadUserProfileImageResponseDto.fromJson(json),
         );
-      }else{
+      } else {
         return ApiError<UploadUserProfileImageResponseDto>(
           'HTTP ${response.statusCode}: $responseBody',
         );
@@ -69,7 +69,8 @@ class ProfileApi {
 
   Future<ApiResult<UserDataResponseDto>> fetchUserData() async {
     final token = await SecureStorage.getToken();
-    var url = Uri.https(AppApi.host, AppApi.baseUrl + AppApi.userDataEndpoint);
+    var url =
+        Uri.https(AppApi.authHost, AppApi.baseUrl + AppApi.userDataEndpoint);
     try {
       var response = await http.get(
         url,
@@ -90,17 +91,24 @@ class ProfileApi {
     }
   }
 
-  Future<ApiResult<LogoutResponseDto>> logout() async {
+  Future<ApiResult<LogoutResponseDto>> logout(String userId) async {
     final token = await SecureStorage.getToken();
-    var url = Uri.https(AppApi.host, AppApi.baseUrl + AppApi.logoutEndpoint);
+    var url =
+        Uri.https(AppApi.authHost, AppApi.baseUrl + AppApi.logoutEndpoint);
     try {
       var response = await http.get(
         url,
         headers: {'Authorization': 'Bearer $token'},
       );
+      if (response.statusCode != 200) {
+        return ApiError<LogoutResponseDto>(
+          'HTTP ${response.statusCode}: ${response.body}',
+        );
+      }
       var responseBody = response.body;
       var json = jsonDecode(responseBody);
       await SecureStorage.deleteToken();
+      await deleteUserProfile(userId);
       return ApiSuccess<LogoutResponseDto>(LogoutResponseDto.fromJson(json));
     } catch (e) {
       return ApiError<LogoutResponseDto>(e.toString());

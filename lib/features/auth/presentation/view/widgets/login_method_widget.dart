@@ -23,11 +23,16 @@ class LoginMethodWidget extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12.h),
           decoration: BoxDecoration(
-            color: isLightMode ? null : AppColors.primary,
+            color:
+                isLightMode ? AppColors.blue.withAlpha(30) : AppColors.primary.withAlpha(230),
             borderRadius: BorderRadius.circular(10.r),
             border: !isLightMode
                 ? null
-                : Border.all(color: AppColors.borderColor, width: 1.4.r),
+                : Border.all(
+                    color: AppColors.secondary.withAlpha(150),
+                    width: 1.4.r,
+                    strokeAlign: BorderSide.strokeAlignOutside,
+                  ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -24,15 +24,18 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       githubId: fields[4] as String,
       emailVerified: fields[5] as bool,
       isActive: fields[6] as bool,
-      createdAt: fields[7] as String,
-      updatedAt: fields[8] as String,
+      skills: (fields[7] as List).cast<String>(),
+      finishedTracks: (fields[8] as List).cast<String>(),
+      trackFinished: fields[9] as bool,
+      createdAt: fields[10] as String,
+      updatedAt: fields[11] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserProfileModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -48,8 +51,14 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       ..writeByte(6)
       ..write(obj.isActive)
       ..writeByte(7)
-      ..write(obj.createdAt)
+      ..write(obj.skills)
       ..writeByte(8)
+      ..write(obj.finishedTracks)
+      ..writeByte(9)
+      ..write(obj.trackFinished)
+      ..writeByte(10)
+      ..write(obj.createdAt)
+      ..writeByte(11)
       ..write(obj.updatedAt);
   }
 

@@ -18,5 +18,5 @@ abstract class ProfileDataSource {
 
   Future<ApiResult<UserDataResponseEntity>> fetchUserData();
 
-  Future<ApiResult<LogoutResponseEntity>> logout();
+  Future<ApiResult<LogoutResponseEntity>> logout(String userId);
 }

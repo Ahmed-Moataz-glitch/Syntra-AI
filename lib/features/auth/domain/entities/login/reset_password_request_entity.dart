@@ -1,7 +1,9 @@
 class ResetPasswordRequestEntity {
-  String token;
+  String email;
+  String otp;
   String password;
   String passwordConfirm;
 
-  ResetPasswordRequestEntity({this.token = '', this.password = '', this.passwordConfirm = ''});
+  ResetPasswordRequestEntity(
+      {this.email = '', this.otp = '', this.password = '', this.passwordConfirm = ''});
 }

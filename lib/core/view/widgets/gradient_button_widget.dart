@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:syntra_ai/core/utils/app_assets.dart';
 import 'package:syntra_ai/core/utils/app_colors.dart';
+import 'package:syntra_ai/generated/l10n.dart';
 
 class GradientButtonWidget extends StatelessWidget {
   final String title;
@@ -36,7 +37,7 @@ class GradientButtonWidget extends StatelessWidget {
               //   color: AppColors.primary,
               // ),
             ),
-            title == 'Sign In' || title == 'Sign Up' 
+            title == S.of(context).login_button || title == S.of(context).signup_button 
             ? 
             SvgPicture.asset(AppAssets.signinIcon)
             :

@@ -27,8 +27,8 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   }
 
   @override
-  Future<ApiResult<LogoutResponseEntity>> logout() async {
-    final result = await _profileApi.logout();
+  Future<ApiResult<LogoutResponseEntity>> logout(String userId) async {
+    final result = await _profileApi.logout(userId);
     switch (result) {
       case ApiSuccess<LogoutResponseDto>():
         return ApiSuccess<LogoutResponseEntity>(result.data?.toEntity());

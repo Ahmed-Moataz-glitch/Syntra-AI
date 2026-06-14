@@ -1,11 +1,15 @@
 import 'package:syntra_ai/features/auth/data/api/api_result.dart';
 import 'package:syntra_ai/features/auth/data/api/auth_api.dart';
+import 'package:syntra_ai/features/auth/data/model/login/forget_password_request_dto.dart';
+import 'package:syntra_ai/features/auth/data/model/login/forget_password_response_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/login/login_request_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/login/login_response_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/login/reset_password_request_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/login/reset_password_response_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/register/register_request_dto.dart';
 import 'package:syntra_ai/features/auth/data/model/register/register_response_dto.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_request_entity.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/reset_password_request_entity.dart';
@@ -89,7 +93,8 @@ class AuthDataSourceImpl implements AuthDataSource {
   ) async {
     final result = await  _authApi.resetPassword(
       ResetPasswordRequestDto(
-        token: resetPasswordRequestEntity.token,
+        email: resetPasswordRequestEntity.email,
+        otp: resetPasswordRequestEntity.otp,
         password: resetPasswordRequestEntity.password,
         passwordConfirm: resetPasswordRequestEntity.passwordConfirm,
       ),
@@ -105,5 +110,20 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<void> saveUserProfile(UserProfileModel userProfileModel) {
     return _authApi.saveUserProfile(userProfileModel);
+  }
+
+  @override
+  Future<ApiResult<ForgetPasswordResponseEntity>> forgetPassword(ForgetPasswordRequestEntity forgetPasswordRequestEntity) async {
+    final result = await _authApi.forgetPassword(
+      ForgetPasswordRequestDto(
+        email: forgetPasswordRequestEntity.email,
+      ),
+    );
+    switch (result) {
+      case ApiSuccess<ForgetPasswordResponseDto>():
+        return ApiSuccess<ForgetPasswordResponseEntity>(result.data?.toEntity());
+      case ApiError<ForgetPasswordResponseDto>():
+        return ApiError<ForgetPasswordResponseEntity>(result.message);
+    }
   }
 }

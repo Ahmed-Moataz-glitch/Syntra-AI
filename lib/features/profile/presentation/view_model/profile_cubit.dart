@@ -75,9 +75,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logout(String userId) async {
     emit(LogoutLoading());
-    final result = await logoutUseCase.call();
+    final result = await logoutUseCase.call(userId);
     switch (result) {
       case ApiSuccess<LogoutResponseEntity>():
         emit(LogoutSuccess(result.data!.message));

@@ -6,7 +6,7 @@ class LogoutUseCase {
   final ProfileRepo _profileRepo;
   LogoutUseCase(this._profileRepo);
 
-  Future<ApiResult<LogoutResponseEntity>> call() {
-    return _profileRepo.logout();
+  Future<ApiResult<LogoutResponseEntity>> call(String userId) {
+    return _profileRepo.logout(userId);
   }
 }

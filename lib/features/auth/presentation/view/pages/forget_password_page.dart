@@ -7,18 +7,19 @@ import 'package:syntra_ai/core/utils/app_routes.dart';
 import 'package:syntra_ai/features/auth/data/api/auth_api.dart';
 import 'package:syntra_ai/features/auth/data/repo/data_source/auth_data_source_impl.dart';
 import 'package:syntra_ai/features/auth/data/repo/repo/auth_repo_impl.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/repo/data_source/auth_data_source.dart';
 import 'package:syntra_ai/features/auth/domain/repo/repo/auth_repo.dart';
+import 'package:syntra_ai/features/auth/domain/use_case/forget_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_email_and_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_github_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_google_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/register_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/reset_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/save_user_profile_use_case.dart';
-import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_existing_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_new_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/validate_otp_use_case.dart';
-import 'package:syntra_ai/features/auth/presentation/view/widgets/gradient_button_widget.dart';
+import 'package:syntra_ai/core/view/widgets/gradient_button_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/text_form_field_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/validator.dart';
 import 'package:syntra_ai/features/auth/presentation/view_model/auth_cubit.dart';
@@ -49,8 +50,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     LoginWithGoogleUseCase loginWithGoogleUseCase = LoginWithGoogleUseCase(authRepo);
     LoginWithGithubUseCase loginWithGithubUseCase = LoginWithGithubUseCase(authRepo);
     SendOtpForNewUserUseCase sendOtpForNewUserUseCase = SendOtpForNewUserUseCase(authRepo);
-    SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase = SendOtpForExistingUserUseCase(authRepo);
+    // SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase = SendOtpForExistingUserUseCase(authRepo);
     ValidateOtpUseCase validateOtpUseCase = ValidateOtpUseCase(authRepo);
+    ForgetPasswordUseCase forgetPasswordUseCase = ForgetPasswordUseCase(authRepo);
     ResetPasswordUseCase resetPasswordUseCase = ResetPasswordUseCase(authRepo);
     authCubit = AuthCubit(
       saveUserProfileUseCase: saveUserProfileUseCase,
@@ -59,8 +61,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       loginWithGoogleUseCase: loginWithGoogleUseCase,
       loginWithGithubUseCase: loginWithGithubUseCase,
       sendOtpForNewUserUseCase: sendOtpForNewUserUseCase,
-      sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
+      // sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
       validateOtpUseCase: validateOtpUseCase,
+      forgetPasswordUseCase: forgetPasswordUseCase,
       resetPasswordUseCase: resetPasswordUseCase,
     );
   }
@@ -146,9 +149,14 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       title: S.of(context).forget_password_button,
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          Navigator.of(context).pushNamed(AppRoutes.verifyCode, arguments: emailController.text.trim());
-                          // await authCubit.sendOtpForExistingUser(emailController.text.trim());
+                          // Navigator.of(context).pushNamed(AppRoutes.verifyCode, arguments: emailController.text.trim());
+                          await authCubit.forgetPassword(
+                            ForgetPasswordRequestEntity(
+                              email: emailController.text.trim(),
+                            ),
+                          );
                         }
+                        // Navigator.of(context).pushNamed(AppRoutes.verifyCode, arguments: emailController.text.trim());
                       },
                     ),
                   ],

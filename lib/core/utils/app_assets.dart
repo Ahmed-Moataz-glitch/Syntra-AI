@@ -15,4 +15,5 @@ abstract class AppAssets {
   static const String teamLottie = 'assets/lotties/team.json';
   static const String employerLottie = 'assets/lotties/employer.json';
   static const String loadingLottie = 'assets/lotties/loading.json';
+  static const String welcomeRobotLottie = 'assets/lotties/welcome_robot.json';
 }

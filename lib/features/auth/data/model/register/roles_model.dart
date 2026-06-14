@@ -21,7 +21,7 @@ class RolesModel {
 }
 
 List<RolesModel> rolesList = [
-  RolesModel(iconData: Icons.school, title: (context) => S.of(context).signup_role1),
+  RolesModel(iconData: Icons.school, title: (context) => S.of(context).signup_role1, isSelected: true),
   RolesModel(iconData: Icons.group, title: (context) => S.of(context).signup_role2),
   RolesModel(iconData: Icons.person_search, title: (context) => S.of(context).signup_role3),
 ];

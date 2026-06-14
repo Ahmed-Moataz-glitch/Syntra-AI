@@ -1,18 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:syntra_ai/core/utils/shared_preferences.dart';
 import 'package:syntra_ai/features/auth/data/api/api_result.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_request_entity.dart';
+import 'package:syntra_ai/features/auth/domain/entities/login/forget_password_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/login_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/reset_password_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/reset_password_response_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/register/register_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/entities/register/register_response_entity.dart';
+import 'package:syntra_ai/features/auth/domain/use_case/forget_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_email_and_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_github_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_google_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/register_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/reset_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/save_user_profile_use_case.dart';
-import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_existing_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_new_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/validate_otp_use_case.dart';
 import 'package:syntra_ai/features/profile/data/model/user_profile_model.dart';
@@ -26,8 +29,9 @@ class AuthCubit extends Cubit<AuthState> {
   final LoginWithGoogleUseCase loginWithGoogleUseCase;
   final LoginWithGithubUseCase loginWithGithubUseCase;
   final SendOtpForNewUserUseCase sendOtpForNewUserUseCase;
-  final SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase;
+  // final SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase;
   final ValidateOtpUseCase validateOtpUseCase;
+  final ForgetPasswordUseCase forgetPasswordUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
   AuthCubit({
     required this.saveUserProfileUseCase,
@@ -36,8 +40,9 @@ class AuthCubit extends Cubit<AuthState> {
     required this.loginWithGoogleUseCase,
     required this.loginWithGithubUseCase,
     required this.sendOtpForNewUserUseCase,
-    required this.sendOtpForExistingUserUseCase,
+    // required this.sendOtpForExistingUserUseCase,
     required this.validateOtpUseCase,
+    required this.forgetPasswordUseCase,
     required this.resetPasswordUseCase,
   }) : super(AuthInitial());
 
@@ -70,16 +75,21 @@ class AuthCubit extends Cubit<AuthState> {
               githubId: user.githubId,
               emailVerified: user.emailVerified,
               isActive: user.isActive,
+              skills: user.skills,
+              finishedTracks: user.finishedTracks,
+              trackFinished: user.trackFinished,
               createdAt: user.createdAt,
               updatedAt: user.updatedAt,
             ),
           );
-          emit(AuthSuccess('Login successful'));
+          await FlutterSharedPreferences.instance.saveStudentId(user.id);
+          await FlutterSharedPreferences.instance.saveRole(user.role);
+          emit(LoginSuccess('Login successful'));
         case ApiError<LoginResponseEntity>():
-          emit(AuthError(result.message));
+          emit(LoginError(result.message));
       }
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(LoginError(e.toString()));
     }
   }
 
@@ -88,12 +98,13 @@ class AuthCubit extends Cubit<AuthState> {
       final result = await registerUseCase.call(registerRequestEntity);
       switch (result) {
         case ApiSuccess<RegisterResponseEntity>():
-          emit(AuthSuccess('Registration successful'));
+          // await FlutterSharedPreferences.instance.saveRole(user.role);
+          emit(RegisterSuccess(result.data!.message));
         case ApiError<RegisterResponseEntity>():
-          emit(AuthError(result.message));
+          emit(RegisterError(result.message));
       }
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(RegisterError(e.toString()));
     }
   }
 
@@ -137,15 +148,15 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> sendOtpForExistingUser(String email) async {
-    emit(SendingOtp());
-    try {
-      await sendOtpForExistingUserUseCase.call(email);
-      emit(OtpSent('OTP sent successfully'));
-    } catch (e) {
-      emit(SendingOtpError(e.toString()));
-    }
-  }
+  // Future<void> sendOtpForExistingUser(String email) async {
+  //   emit(SendingOtp());
+  //   try {
+  //     await sendOtpForExistingUserUseCase.call(email);
+  //     emit(OtpSent('OTP sent successfully'));
+  //   } catch (e) {
+  //     emit(SendingOtpError(e.toString()));
+  //   }
+  // }
 
   Future<void> validateOtp({required String email, required String otp}) async {
     try {
@@ -161,6 +172,24 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> forgetPassword(
+      ForgetPasswordRequestEntity forgetPasswordRequestEntity) async {
+    emit(AuthLoading());
+    try {
+      final result = await forgetPasswordUseCase.call(
+        forgetPasswordRequestEntity,
+      );
+      switch (result) {
+        case ApiSuccess<ForgetPasswordResponseEntity>():
+          emit(ForgetPasswordSuccess(result.data!.message));
+        case ApiError<ForgetPasswordResponseEntity>():
+          emit(ForgetPasswordError(result.message));
+      }
+    } catch (e) {
+      emit(RegisterError(e.toString()));
+    }
+  }
+
   Future<void> resetPassword(
     ResetPasswordRequestEntity resetPasswordRequestEntity,
   ) async {
@@ -170,12 +199,12 @@ class AuthCubit extends Cubit<AuthState> {
       );
       switch (result) {
         case ApiSuccess<ResetPasswordResponseEntity>():
-          emit(AuthSuccess('Reset password successful'));
+          emit(ResetPasswordSuccess(result.data!.message));
         case ApiError<ResetPasswordResponseEntity>():
-          emit(AuthError(result.message));
+          emit(ResetPasswordError(result.message));
       }
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(ResetPasswordError(e.toString()));
     }
   }
 }

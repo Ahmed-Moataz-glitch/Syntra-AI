@@ -4,23 +4,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syntra_ai/core/utils/app_colors.dart';
 import 'package:syntra_ai/core/utils/app_routes.dart';
 import 'package:syntra_ai/core/utils/app_toast.dart';
-import 'package:syntra_ai/core/utils/secure_storage.dart';
 import 'package:syntra_ai/features/auth/data/api/auth_api.dart';
 import 'package:syntra_ai/features/auth/data/repo/data_source/auth_data_source_impl.dart';
 import 'package:syntra_ai/features/auth/data/repo/repo/auth_repo_impl.dart';
 import 'package:syntra_ai/features/auth/domain/entities/login/reset_password_request_entity.dart';
 import 'package:syntra_ai/features/auth/domain/repo/data_source/auth_data_source.dart';
 import 'package:syntra_ai/features/auth/domain/repo/repo/auth_repo.dart';
+import 'package:syntra_ai/features/auth/domain/use_case/forget_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_email_and_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_github_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/login_with_google_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/register_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/reset_password_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/save_user_profile_use_case.dart';
-import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_existing_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/send_otp_for_new_user_use_case.dart';
 import 'package:syntra_ai/features/auth/domain/use_case/validate_otp_use_case.dart';
-import 'package:syntra_ai/features/auth/presentation/view/widgets/gradient_button_widget.dart';
+import 'package:syntra_ai/core/view/widgets/gradient_button_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/text_form_field_widget.dart';
 import 'package:syntra_ai/features/auth/presentation/view/widgets/validator.dart';
 import 'package:syntra_ai/features/auth/presentation/view_model/auth_cubit.dart';
@@ -28,7 +27,9 @@ import 'package:syntra_ai/generated/l10n.dart';
 import 'package:toastification/toastification.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final String email;
+  final String otp;
+  const ResetPasswordPage({super.key, required this.email, required this.otp});
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -48,14 +49,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     AuthApi authApi = AuthApi();
     AuthDataSource authDataSource = AuthDataSourceImpl(authApi);
     AuthRepo authRepo = AuthRepoImpl(authDataSource);
-    SaveUserProfileUseCase saveUserProfileUseCase = SaveUserProfileUseCase(authRepo);
-    LoginWithEmailAndPasswordUseCase loginWithEmailAndPasswordUseCase = LoginWithEmailAndPasswordUseCase(authRepo);
+    SaveUserProfileUseCase saveUserProfileUseCase =
+        SaveUserProfileUseCase(authRepo);
+    LoginWithEmailAndPasswordUseCase loginWithEmailAndPasswordUseCase =
+        LoginWithEmailAndPasswordUseCase(authRepo);
     RegisterUseCase registerUseCase = RegisterUseCase(authRepo);
-    LoginWithGoogleUseCase loginWithGoogleUseCase = LoginWithGoogleUseCase(authRepo);
-    LoginWithGithubUseCase loginWithGithubUseCase = LoginWithGithubUseCase(authRepo);
-    SendOtpForNewUserUseCase sendOtpForNewUserUseCase = SendOtpForNewUserUseCase(authRepo);
-    SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase = SendOtpForExistingUserUseCase(authRepo);
+    LoginWithGoogleUseCase loginWithGoogleUseCase =
+        LoginWithGoogleUseCase(authRepo);
+    LoginWithGithubUseCase loginWithGithubUseCase =
+        LoginWithGithubUseCase(authRepo);
+    SendOtpForNewUserUseCase sendOtpForNewUserUseCase =
+        SendOtpForNewUserUseCase(authRepo);
+    // SendOtpForExistingUserUseCase sendOtpForExistingUserUseCase =
+    //     SendOtpForExistingUserUseCase(authRepo);
     ValidateOtpUseCase validateOtpUseCase = ValidateOtpUseCase(authRepo);
+    ForgetPasswordUseCase forgetPasswordUseCase =
+        ForgetPasswordUseCase(authRepo);
     ResetPasswordUseCase resetPasswordUseCase = ResetPasswordUseCase(authRepo);
     authCubit = AuthCubit(
       saveUserProfileUseCase: saveUserProfileUseCase,
@@ -64,8 +73,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       loginWithGoogleUseCase: loginWithGoogleUseCase,
       loginWithGithubUseCase: loginWithGithubUseCase,
       sendOtpForNewUserUseCase: sendOtpForNewUserUseCase,
-      sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
+      // sendOtpForExistingUserUseCase: sendOtpForExistingUserUseCase,
       validateOtpUseCase: validateOtpUseCase,
+      forgetPasswordUseCase: forgetPasswordUseCase,
       resetPasswordUseCase: resetPasswordUseCase,
     );
   }
@@ -82,7 +92,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isLightMode = Theme.of(context).brightness == Brightness.light;
-    final token = SecureStorage.getToken();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -93,12 +102,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       body: BlocListener<AuthCubit, AuthState>(
         bloc: authCubit,
         listenWhen: (previous, current) =>
-            current is AuthSuccess || current is AuthError,
+            current is ResetPasswordSuccess || current is ResetPasswordError,
         listener: (context, state) {
-          if (state is AuthSuccess) {
+          if (state is ResetPasswordSuccess) {
             Navigator.of(context).pushNamed(AppRoutes.successfulResetPassword);
           }
-          if (state is AuthError) {
+          if (state is ResetPasswordError) {
             AppToast.showToast(
               context: context,
               title: S.of(context).app_toast_error,
@@ -120,8 +129,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               Text(
                 S.of(context).reset_password_title2,
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  color: isLightMode ? null : AppColors.primary.withAlpha(200),
-                ),
+                      color:
+                          isLightMode ? null : AppColors.primary.withAlpha(200),
+                    ),
                 textAlign: TextAlign.center,
                 // style: TextStyle(
                 //   fontSize: 18.sp,
@@ -150,7 +160,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       obscureText: true,
                       controller: newPasswordController,
                       validator: Validator.validatePassword,
-                      hintText: S.of(context).reset_password_new_password_hint_text,
+                      hintText:
+                          S.of(context).reset_password_new_password_hint_text,
                     ),
                     SizedBox(height: size.height * 0.04),
                     Text(
@@ -171,7 +182,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         value,
                         newPasswordController.text.trim(),
                       ),
-                      hintText: S.of(context).reset_password_confirm_password_hint_text,
+                      hintText: S
+                          .of(context)
+                          .reset_password_confirm_password_hint_text,
                     ),
                     SizedBox(height: size.height * 0.05),
                     GradientButtonWidget(
@@ -180,9 +193,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         if (formKey.currentState!.validate()) {
                           await authCubit.resetPassword(
                             ResetPasswordRequestEntity(
-                              token: await token ?? '',
+                              email: widget.email,
                               password: newPasswordController.text.trim(),
-                              passwordConfirm: confirmPasswordController.text.trim(),
+                              passwordConfirm:
+                                  confirmPasswordController.text.trim(),
                             ),
                           );
                           // if (!context.mounted) {

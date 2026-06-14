@@ -7,7 +7,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:syntra_ai/core/utils/app_assets.dart';
 import 'package:syntra_ai/core/utils/app_colors.dart';
 import 'package:syntra_ai/features/auth/presentation/view/pages/login_page.dart';
-import 'package:syntra_ai/features/auth/presentation/view/widgets/gradient_button_widget.dart';
+import 'package:syntra_ai/core/view/widgets/gradient_button_widget.dart';
 import 'package:syntra_ai/generated/l10n.dart';
 
 class OnboardingPage extends StatefulWidget {

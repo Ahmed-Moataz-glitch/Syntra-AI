@@ -5,9 +5,12 @@ import 'package:syntra_ai/core/view_model/theme_cubit/theme_cubit.dart';
 class FlutterSharedPreferences {
   FlutterSharedPreferences._();
   static final FlutterSharedPreferences instance = FlutterSharedPreferences._();
-  static final Future<SharedPreferences> _sharedPreferences = SharedPreferences.getInstance();
+  static final Future<SharedPreferences> _sharedPreferences =
+      SharedPreferences.getInstance();
   final themeModeKey = 'themeMode';
   final languageKey = 'language';
+  final studentIdKey = 'studentId';
+  final roleKey = 'role';
 
   Future<SharedPreferences> get() async {
     return await SharedPreferences.getInstance();
@@ -55,5 +58,35 @@ class FlutterSharedPreferences {
   Future<void> removeLanguage() async {
     final prefs = await _sharedPreferences;
     await prefs.remove(languageKey);
+  }
+
+  Future<void> saveRole(String role) async {
+    final prefs = await _sharedPreferences;
+    prefs.setString(roleKey, role);
+  }
+
+  Future<String> getRole() async {
+    final prefs = await _sharedPreferences;
+    return prefs.getString(roleKey) ?? '';
+  }
+
+  Future<void> removeRole() async {
+    final prefs = await _sharedPreferences;
+    await prefs.remove(roleKey);
+  }
+
+  Future<void> saveStudentId(String studentId) async {
+    final prefs = await _sharedPreferences;
+    prefs.setString(studentIdKey, studentId);
+  }
+
+  Future<String> getStudentId() async {
+    final prefs = await _sharedPreferences;
+    return prefs.getString(studentIdKey) ?? '';
+  }
+
+  Future<void> removeStudentId() async {
+    final prefs = await _sharedPreferences;
+    await prefs.remove(studentIdKey);
   }
 }

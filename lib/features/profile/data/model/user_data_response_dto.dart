@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:syntra_ai/features/profile/domain/entities/user_data_response_entity.dart';
 
 class UserDataResponseDto {
@@ -72,17 +73,14 @@ class UserData {
     githubId = json['githubId'];
     isActive = json['isActive'];
     emailVerified = json['emailVerified'];
-    skills = (json['skills'] as List?)
-          ?.map((e) => e.toString())
-          .toList() ??
-      <String>[];
-    finishedTracks = (json['finishedTracks'] as List?)
-          ?.map((e) => e.toString())
-          .toList() ??
-      <String>[];
+    skills = (json['skills'] as List?)?.map((e) => e.toString()).toList() ??
+        <String>[];
+    finishedTracks =
+        (json['finishedTracks'] as List?)?.map((e) => e.toString()).toList() ??
+            <String>[];
     trackFinished = json['trackFinished'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    createdAt = formatIso(json['createdAt']);
+    updatedAt = formatIso(json['updatedAt']);
   }
 
   UserDataEntity toEntity() {
@@ -101,5 +99,12 @@ class UserData {
       createdAt: createdAt ?? '',
       updatedAt: updatedAt ?? '',
     );
+  }
+
+  String formatIso(String iso) {
+    final dtUtc = DateTime.parse(iso); // parses ISO-8601, respects 'Z' as UTC
+    final dtLocal = dtUtc.toLocal(); // convert to device local timezone
+
+    return DateFormat('MMM d, y, h:mm a', 'en_US').format(dtLocal);
   }
 }

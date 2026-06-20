@@ -9,8 +9,11 @@ abstract class AppRoutes {
   static const String successfulResetPassword = '/successful-reset-password';
   static const String register = '/register';
   static const String home = '/home';
-  static const String learn = '/learn';
-  static const String community = '/community';
+  static const String learnForLearner = '/learn-learner';
+  static const String learnForTeam = '/learn-team';
+  static const String learnForRecruiter = '/learn-recruiter';
+  static const String communityForLearnerAndTeam = '/community-learner-team';
+  static const String communityForRecruiter = '/community-recruiter';
   static const String profile = '/profile';
   static const String workFlow = '/work-flow';
   static const String roles = '/roles';

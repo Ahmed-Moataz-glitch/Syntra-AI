@@ -20,6 +20,7 @@ class WeekDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
     return Scaffold(
       appBar: AppBar(
         title: Text('Week Details'),
@@ -34,7 +35,7 @@ class WeekDetailsWidget extends StatelessWidget {
                 width: size.width * 0.34,
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
-                  color: AppColors.purple.withAlpha(20),
+                  color: isLightMode ? AppColors.purple.withAlpha(20) : AppColors.blue.withAlpha(30),
                   borderRadius: BorderRadius.circular(36.r),
                 ),
                 child: Row(
@@ -42,13 +43,13 @@ class WeekDetailsWidget extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.map_outlined,
-                      color: AppColors.purple,
+                      color: isLightMode ? AppColors.purple : AppColors.blue,
                       size: 24.sp,
                     ),
                     Text(
                       'WEEK ${generateRoadmapResponseEntity.roadmap[weekIndex].weekNumber}',
                       style: TextStyle(
-                        color: AppColors.purple,
+                        color: isLightMode ? AppColors.purple : AppColors.blue,
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -77,14 +78,14 @@ class WeekDetailsWidget extends StatelessWidget {
                           Icon(
                             Icons.access_time_outlined,
                             size: 24.sp,
-                            color: AppColors.secondary,
+                            color: isLightMode ? AppColors.secondary : AppColors.primary.withAlpha(150),
                           ),
                           SizedBox(width: 12.w),
                           Text(
                             '${generateRoadmapResponseEntity.roadmap[weekIndex].skills[index].estimatedHours} hours to master',
                             style: TextStyle(
                               fontSize: 18.sp,
-                              color: AppColors.secondary,
+                              color: isLightMode ? AppColors.secondary : AppColors.primary.withAlpha(150),
                             ),
                           ),
                         ],
@@ -113,7 +114,7 @@ class WeekDetailsWidget extends StatelessWidget {
                                       'EFFORT INTENSITY',
                                       style: TextStyle(
                                         fontSize: 16.sp,
-                                        color: AppColors.secondary,
+                                        color: isLightMode ? AppColors.secondary : AppColors.primary.withAlpha(150),
                                       ),
                                     ),
                                   ],
@@ -122,7 +123,7 @@ class WeekDetailsWidget extends StatelessWidget {
                                   '${generateRoadmapResponseEntity.roadmap[weekIndex].skills[index].estimatedHours}H',
                                   style: TextStyle(
                                     fontSize: 16.sp,
-                                    color: AppColors.semiBlack.withAlpha(200),
+                                    color: isLightMode ? AppColors.semiBlack.withAlpha(200) : AppColors.primary.withAlpha(150),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -134,7 +135,7 @@ class WeekDetailsWidget extends StatelessWidget {
                                 Container(
                                   height: 8.h,
                                   decoration: BoxDecoration(
-                                    color: AppColors.secondary.withAlpha(30),
+                                    color: isLightMode ? AppColors.secondary.withAlpha(30) : AppColors.primary.withAlpha(80),
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                 ),
@@ -163,7 +164,7 @@ class WeekDetailsWidget extends StatelessWidget {
                         'CURATED RESOURCES',
                         style: TextStyle(
                           fontSize: 18.sp,
-                          color: AppColors.semiBlack.withAlpha(200),
+                          color: isLightMode ? AppColors.semiBlack.withAlpha(200) : AppColors.primary.withAlpha(150),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -171,7 +172,7 @@ class WeekDetailsWidget extends StatelessWidget {
                       generateRoadmapResponseEntity.roadmap[weekIndex].skills[index].resources.youtubeLink.isNotEmpty
                           ? ResourcesItemWidget(
                               icon: Icons.youtube_searched_for_outlined,
-                              iconColor: AppColors.red.withAlpha(200),
+                              iconColor: isLightMode ? AppColors.red.withAlpha(200) : AppColors.red.withAlpha(180),
                               title: 'VIDEO TUTORIAL',
                               link: generateRoadmapResponseEntity.roadmap[weekIndex].skills[index].resources.youtubeLink,
                               onPressed: () => openLink(generateRoadmapResponseEntity.roadmap[weekIndex].skills[index].resources.youtubeLink),
@@ -181,7 +182,7 @@ class WeekDetailsWidget extends StatelessWidget {
                       generateRoadmapResponseEntity.roadmap[weekIndex].skills[index].resources.bookReference.isNotEmpty
                           ? ResourcesItemWidget(
                               icon: Icons.book_outlined,
-                              iconColor: AppColors.orange.withAlpha(200),
+                              iconColor: isLightMode ? AppColors.orange.withAlpha(200) : AppColors.orange.withAlpha(180),
                               title: 'BOOK REFERENCE',
                               link: generateRoadmapResponseEntity.roadmap[weekIndex]
                                   .skills[index].resources.bookReference,
@@ -192,7 +193,7 @@ class WeekDetailsWidget extends StatelessWidget {
                               .skills[index].resources.articleLink.isNotEmpty
                           ? ResourcesItemWidget(
                               icon: Icons.article_outlined,
-                              iconColor: AppColors.blue.withAlpha(200),
+                              iconColor: isLightMode ? AppColors.blue.withAlpha(200) : AppColors.blue.withAlpha(180),
                               title: 'DEEP-DIVE ARTICLE',
                               link: generateRoadmapResponseEntity.roadmap[weekIndex]
                                   .skills[index].resources.articleLink,
@@ -211,7 +212,7 @@ class WeekDetailsWidget extends StatelessWidget {
                       child: Divider(
                         indent: 12.w,
                         endIndent: 12.w,
-                        color: AppColors.secondary.withAlpha(100),
+                        color: isLightMode ? AppColors.secondary.withAlpha(100) : AppColors.primary.withAlpha(100),
                         thickness: 1.5.r,
                       ),
                     ),
@@ -228,7 +229,7 @@ class WeekDetailsWidget extends StatelessWidget {
                         'Week ${generateRoadmapResponseEntity.roadmap[weekIndex].weekNumber} completed! Great job!',
                         style: TextStyle(
                           fontSize: 18.sp,
-                          color: AppColors.green,
+                          color: isLightMode ? AppColors.green : AppColors.green.withAlpha(200),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -240,7 +241,7 @@ class WeekDetailsWidget extends StatelessWidget {
                           'Ready to unlock the next week?',
                           style: TextStyle(
                             fontSize: 18.sp,
-                            color: AppColors.black,
+                            color: isLightMode ? AppColors.black : AppColors.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -249,7 +250,7 @@ class WeekDetailsWidget extends StatelessWidget {
                           'Study this week\'s resources, then pass the quiz (70%+) to continue.',
                           style: TextStyle(
                             fontSize: 15.sp,
-                            color: AppColors.secondary,
+                            color: isLightMode ? AppColors.secondary : AppColors.primary.withAlpha(150),
                           ),
                         ),
                         SizedBox(height: 24.h),

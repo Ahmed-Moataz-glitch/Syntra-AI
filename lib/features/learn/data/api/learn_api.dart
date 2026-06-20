@@ -204,8 +204,10 @@ class LearnApi {
 
   Future<ApiResult<EvaluationResultResponseDto>> getEvaluationResult(
       String studentId) async {
-    var url = Uri.https(AppApi.evaluateProjectEndpoint,
-        AppApi.evaluationResultEndpoint + studentId);
+    var url = Uri.https(
+        AppApi.learningProjectHost,
+        AppApi.evaluationResultEndpoint + studentId,
+    );
     try {
       var response = await http.get(
         url,

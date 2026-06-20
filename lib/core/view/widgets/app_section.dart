@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syntra_ai/core/utils/app_colors.dart';
 import 'package:syntra_ai/core/utils/shared_preferences.dart';
-import 'package:syntra_ai/features/community/presentation/view/pages/community_page.dart';
+import 'package:syntra_ai/features/community/presentation/view/pages/community_page_for_learner_and_team.dart';
+import 'package:syntra_ai/features/community/presentation/view/pages/community_page_for_recruiter.dart';
 import 'package:syntra_ai/features/home/presentation/view/pages/home_page.dart';
 import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page_for_learner.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page_for_recruiter.dart';
 import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page_for_team.dart';
 import 'package:syntra_ai/features/profile/presentation/view/pages/profile_page.dart';
 import 'package:syntra_ai/generated/l10n.dart';
@@ -41,8 +43,8 @@ class _AppSectionState extends State<AppSection> {
     role = await FlutterSharedPreferences.instance.getRole();
     pages = [
       const HomePage(),
-      role == 'learner' ? const LearnPageForLearner() : LearnPageForTeam(),
-      const CommunityPage(),
+      role == 'learner' ? const LearnPageForLearner() : role == 'team' ? const LearnPageForTeam() : const LearnPageForRecruiter(),
+      role == 'recruiter' ? const CommunityPageForRecruiter() : const CommunityPageForLearnerAndTeam(),
       const ProfilePage(),
     ];
     setState(() {});
@@ -64,17 +66,21 @@ class _AppSectionState extends State<AppSection> {
       TabItem(label: S.of(context).bottom_nav_bar_title4, icon: Icons.person),
     ];
     return Scaffold(
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (index) => setState(() => activeIndex = index),
-        physics:
-            const NeverScrollableScrollPhysics(), // Disable swipe navigation
-        children: pages,
-      ),
+      body: pages[activeIndex],
+      // body: PageView.builder(
+      //   controller: pageController,
+      //   itemCount: pages.length,
+      //   onPageChanged: (index) => setState(() => activeIndex = index),
+      //   physics:
+      //       const NeverScrollableScrollPhysics(), // Disable swipe navigation
+      //   itemBuilder: (context, index) => pages[index],
+      // ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(
+            top: isLightMode 
+            ? BorderSide.none 
+            : BorderSide(
               color:AppColors.primary.withAlpha(200),
               width: 0.8.r,
             ),
@@ -83,13 +89,13 @@ class _AppSectionState extends State<AppSection> {
         child: AnimatedBottomNavigationBar.builder(
           itemCount: tabs.length,
           activeIndex: activeIndex,
-          onTap: _onTabTapped,
+          onTap: (index){
+            activeIndex = index;
+            setState(() {});
+          },
           gapLocation: GapLocation.none,
-          // activeColor: AppColors.primary,
-          // inactiveColor: AppColors.grey,
           elevation: 10,
           backgroundColor: isLightMode ? AppColors.blue : AppColors.dark,
-          // borderColor: AppColors.primary,
           tabBuilder: (index, isActive) {
             final color = isActive
                 ? !isLightMode
@@ -121,15 +127,15 @@ class _AppSectionState extends State<AppSection> {
     );
   }
 
-  void _onTabTapped(int index) {
-    activeIndex = index;
-    // Animated navigation between screens
-    pageController.animateToPage(
-      activeIndex,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOutCirc,
-    );
-  }
+  // void _onTabTapped(int index) {
+  //   activeIndex = index;
+  //   // Animated navigation between screens
+  //   pageController.animateToPage(
+  //     activeIndex,
+  //     duration: const Duration(milliseconds: 200),
+  //     curve: Curves.easeInOutCirc,
+  //   );
+  // }
 }
 
 // import 'package:flutter/material.dart';

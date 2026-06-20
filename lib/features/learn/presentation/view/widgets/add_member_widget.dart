@@ -213,7 +213,7 @@ class _AddMemberWidgetState extends State<AddMemberWidget> {
             });
           },
           child: Container(
-            width: isArabic ? size.width * 0.4 : size.width * 0.5,
+            width: isArabic ? size.width * 0.4 : size.width * 0.52,
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
             decoration: BoxDecoration(
               color: isLightMode

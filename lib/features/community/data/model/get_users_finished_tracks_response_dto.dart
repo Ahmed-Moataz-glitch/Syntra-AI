@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:syntra_ai/features/community/domain/entities/get_users_finished_tracks_response_entity.dart';
 
 class GetUsersFinishedTracksResponseDto {
@@ -89,8 +90,8 @@ class UsersFinishedTracks {
         (json['finishedTracks'] as List?)?.map((e) => e.toString()).toList() ??
             <String>[];
     trackFinished = json['trackFinished'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    createdAt = formatIso(json['createdAt']);
+    updatedAt = formatIso(json['updatedAt']);
   }
 
   UsersFinishedTracksEntity toEntity() {
@@ -109,5 +110,12 @@ class UsersFinishedTracks {
       createdAt: createdAt ?? '',
       updatedAt: updatedAt ?? '',
     );
+  }
+
+  String formatIso(String iso) {
+    final dtUtc = DateTime.parse(iso); // parses ISO-8601, respects 'Z' as UTC
+    final dtLocal = dtUtc.toLocal(); // convert to device local timezone
+
+    return DateFormat('MMM d, y', 'en_US').format(dtLocal);
   }
 }

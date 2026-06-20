@@ -26,13 +26,16 @@ import 'package:syntra_ai/features/auth/presentation/view/pages/reset_password_p
 import 'package:syntra_ai/features/auth/presentation/view/pages/successful_reset_password_page.dart';
 import 'package:syntra_ai/features/auth/presentation/view/pages/verify_code_page.dart';
 import 'package:syntra_ai/features/auth/presentation/view/pages/verify_email_page.dart';
-import 'package:syntra_ai/features/community/presentation/view/pages/community_page.dart';
+import 'package:syntra_ai/features/community/presentation/view/pages/community_page_for_learner_and_team.dart';
+import 'package:syntra_ai/features/community/presentation/view/pages/community_page_for_recruiter.dart';
 import 'package:syntra_ai/features/home/presentation/view/pages/home_page.dart';
 import 'package:syntra_ai/features/home/presentation/view/pages/roles_page.dart';
 import 'package:syntra_ai/features/home/presentation/view/pages/work_flow_page.dart';
 import 'package:syntra_ai/features/learn/data/model/user_roadmap_model.dart';
 import 'package:syntra_ai/features/learn/domain/entities/generate_roadmap_response_entity.dart';
 import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page_for_learner.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page_for_recruiter.dart';
+import 'package:syntra_ai/features/learn/presentation/view/pages/learn_page_for_team.dart';
 import 'package:syntra_ai/features/learn/presentation/view/pages/learning_project_page.dart';
 import 'package:syntra_ai/features/learn/presentation/view/pages/questions_page.dart';
 import 'package:syntra_ai/features/learn/presentation/view/pages/roadmap_page.dart';
@@ -263,7 +266,8 @@ class MyApp extends StatelessWidget {
                             builder: (context) => VerifyCodePage(email: email),
                           );
                         case AppRoutes.resetPassword:
-                          final args = settings.arguments as Map<String, dynamic>;
+                          final args =
+                              settings.arguments as Map<String, dynamic>;
                           final email = args['email'] as String;
                           final otp = args['otp'] as String;
                           return MaterialPageRoute(
@@ -312,7 +316,8 @@ class MyApp extends StatelessWidget {
                           final learnCubit = args['learnCubit'] as LearnCubit;
                           final generateRoadmapResponseEntity =
                               args['generateRoadmapResponseEntity']
-                                  as GenerateRoadmapResponseEntity;                          return MaterialPageRoute(
+                                  as GenerateRoadmapResponseEntity;
+                          return MaterialPageRoute(
                             builder: (context) => RoadmapPage(
                               learnCubit: learnCubit,
                               generateRoadmapResponseEntity:
@@ -351,13 +356,26 @@ class MyApp extends StatelessWidget {
                           return MaterialPageRoute(
                             builder: (context) => const HomePage(),
                           );
-                        case AppRoutes.learn:
+                        case AppRoutes.learnForLearner:
                           return MaterialPageRoute(
                             builder: (context) => const LearnPageForLearner(),
                           );
-                        case AppRoutes.community:
+                        case AppRoutes.learnForTeam:
                           return MaterialPageRoute(
-                            builder: (context) => const CommunityPage(),
+                            builder: (context) => const LearnPageForTeam(),
+                          );
+                        case AppRoutes.learnForRecruiter:
+                          return MaterialPageRoute(
+                            builder: (context) => const LearnPageForRecruiter(),
+                          );
+                        case AppRoutes.communityForLearnerAndTeam:
+                          return MaterialPageRoute(
+                            builder: (context) =>
+                                const CommunityPageForLearnerAndTeam(),
+                          );
+                        case AppRoutes.communityForRecruiter:
+                          return MaterialPageRoute(
+                            builder: (context) => const CommunityPageForRecruiter(),
                           );
                         case AppRoutes.profile:
                           return MaterialPageRoute(

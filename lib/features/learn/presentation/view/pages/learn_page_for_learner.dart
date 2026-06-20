@@ -6,6 +6,7 @@ import 'package:syntra_ai/core/utils/app_colors.dart';
 import 'package:syntra_ai/core/utils/app_routes.dart';
 import 'package:syntra_ai/core/view/widgets/logo_widget.dart';
 import 'package:syntra_ai/features/learn/data/api/learn_api.dart';
+import 'package:syntra_ai/features/learn/data/model/user_roadmap_model.dart';
 import 'package:syntra_ai/features/learn/data/repo/data_source/learn_data_source_impl.dart';
 import 'package:syntra_ai/features/learn/data/repo/repo/learn_repo_impl.dart';
 import 'package:syntra_ai/features/learn/domain/entities/generate_roadmap_response_entity.dart';
@@ -38,6 +39,7 @@ class LearnPageForLearner extends StatefulWidget {
 
 class _LearnPageForLearnerState extends State<LearnPageForLearner> {
   late final LearnCubit learnCubit;
+  late final UserRoadmapModel? savedRoadmapModel;
 
   @override
   void initState() {
@@ -51,8 +53,7 @@ class _LearnPageForLearnerState extends State<LearnPageForLearner> {
         GenerateRoadmapUseCase(learnRepo);
     ExtractKeyPointsUseCase extractKeyPointsUseCase =
         ExtractKeyPointsUseCase(learnRepo);
-    GenerateQuizUseCase generateQuizUseCase =
-        GenerateQuizUseCase(learnRepo);
+    GenerateQuizUseCase generateQuizUseCase = GenerateQuizUseCase(learnRepo);
     RecommendedProjectsUseCase recommendedProjectsUseCase =
         RecommendedProjectsUseCase(learnRepo);
     EvaluateProjectUseCase evaluateProjectUseCase =
@@ -80,6 +81,7 @@ class _LearnPageForLearnerState extends State<LearnPageForLearner> {
       addFinishedSkillUseCase: addFinishedSkillUseCase,
       addFinishedTrackUseCase: addFinishedTrackUseCase,
     );
+    savedRoadmapModel = learnCubit.getUserRoadmap();
   }
 
   @override
@@ -209,28 +211,36 @@ class _LearnPageForLearnerState extends State<LearnPageForLearner> {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              SizedBox(
-                width: size.width * 0.45,
-                child: SecondaryGradientButtonWidget(
-                  title: 'Continue Learning',
-                  onPressed: () async {
-                    Navigator.of(context, rootNavigator: true).pushNamed(
-                      AppRoutes.roadmap,
-                      arguments: {
-                        'learnCubit': learnCubit,
-                        'generateRoadmapResponseEntity': GenerateRoadmapResponseEntity(
-                          trackName: '',
-                          selectedIndex: 0,
-                          userHoursPerWeek: 0,
-                          totalWeeksCalculated: 0,
-                          roadmap: [],
+              savedRoadmapModel != null
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.45,
+                          child: SecondaryGradientButtonWidget(
+                            title: 'Continue Learning',
+                            onPressed: () async {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushNamed(
+                                AppRoutes.roadmap,
+                                arguments: {
+                                  'learnCubit': learnCubit,
+                                  'generateRoadmapResponseEntity':
+                                      GenerateRoadmapResponseEntity(
+                                    trackName: '',
+                                    selectedIndex: 0,
+                                    userHoursPerWeek: 0,
+                                    totalWeeksCalculated: 0,
+                                    roadmap: [],
+                                  ),
+                                },
+                              );
+                            },
+                          ),
                         ),
-                      },
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: size.height * 0.02),
+                        SizedBox(height: size.height * 0.02),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
               Row(
                 children: [
                   Expanded(

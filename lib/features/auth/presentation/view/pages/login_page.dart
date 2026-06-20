@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: SizedBox(
-          width: size.width * 0.425,
+          width: size.width * 0.44,
           height: size.height * 0.07,
           child: const LogoWidget(),
         ),

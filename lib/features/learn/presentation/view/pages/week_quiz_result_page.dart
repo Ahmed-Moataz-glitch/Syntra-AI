@@ -91,6 +91,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -98,7 +99,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: AppColors.purple,
+            color:  isLightMode ? AppColors.purple : AppColors.blue,
           ),
         ),
       ),
@@ -108,19 +109,19 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                 BlocListener<LearnCubit, LearnState>(
                   bloc: learnCubit,
                   listenWhen: (previous, current) =>
-                      current is AddFinishedTrackLoading ||
-                      current is AddFinishedTrackSuccess ||
+                      // current is AddFinishedTrackLoading ||
+                      // current is AddFinishedTrackSuccess ||
                       current is AddFinishedTrackError,
                   listener: (context, state) {
-                    if (state is AddFinishedTrackLoading) {
-                      AppDialogs.showLoadingDialog(context,
-                          title: 'Adding Finished Track...');
-                    }
-                    if (state is AddFinishedTrackSuccess) {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    }
+                    // if (state is AddFinishedTrackLoading) {
+                    //   AppDialogs.showLoadingDialog(context,
+                    //       title: 'Adding Finished Track...');
+                    // }
+                    // if (state is AddFinishedTrackSuccess) {
+                    //   Navigator.of(context, rootNavigator: true).pop();
+                    // }
                     if (state is AddFinishedTrackError) {
-                      Navigator.of(context, rootNavigator: true).pop();
+                      // Navigator.of(context, rootNavigator: true).pop();
                       AppToast.showToast(
                           context: context,
                           title: 'Error',
@@ -132,19 +133,19 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                 BlocListener<LearnCubit, LearnState>(
                   bloc: learnCubit,
                   listenWhen: (previous, current) =>
-                      current is AddFinishedSkillLoading ||
-                      current is AddFinishedSkillSuccess ||
+                      // current is AddFinishedSkillLoading ||
+                      // current is AddFinishedSkillSuccess ||
                       current is AddFinishedSkillError,
                   listener: (context, state) {
-                    if (state is AddFinishedSkillLoading) {
-                      AppDialogs.showLoadingDialog(context,
-                          title: 'Adding Finished Skill...');
-                    }
-                    if (state is AddFinishedSkillSuccess) {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    }
+                    // if (state is AddFinishedSkillLoading) {
+                    //   AppDialogs.showLoadingDialog(context,
+                    //       title: 'Adding Finished Skill...');
+                    // }
+                    // if (state is AddFinishedSkillSuccess) {
+                    //   Navigator.of(context, rootNavigator: true).pop();
+                    // }
                     if (state is AddFinishedSkillError) {
-                      Navigator.of(context, rootNavigator: true).pop();
+                      // Navigator.of(context, rootNavigator: true).pop();
                       AppToast.showToast(
                           context: context,
                           title: 'Error',
@@ -255,7 +256,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                       TextSpan(
                         text: 'You scored ',
                         style: TextStyle(
-                          color: AppColors.secondary.withAlpha(200),
+                          color:  isLightMode ? AppColors.secondary.withAlpha(200) : AppColors.primary.withAlpha(150),
                           fontSize: 17.sp,
                         ),
                         children: [
@@ -264,7 +265,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.black,
+                              color: isLightMode ? AppColors.black : AppColors.primary,
                             ),
                           ),
                           TextSpan(
@@ -272,7 +273,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                                 '— Week ${widget.weekNumber} is done. The next week is now unlocked!',
                             style: TextStyle(
                               fontSize: 17.sp,
-                              color: AppColors.secondary.withAlpha(200),
+                              color: isLightMode ? AppColors.secondary.withAlpha(200) : AppColors.primary.withAlpha(150),
                             ),
                           ),
                         ],
@@ -411,7 +412,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                     TextSpan(
                       text: 'You scored ',
                       style: TextStyle(
-                        color: AppColors.secondary.withAlpha(200),
+                        color: isLightMode ? AppColors.secondary.withAlpha(200) : AppColors.primary.withAlpha(150),
                         fontSize: 17.sp,
                       ),
                       children: [
@@ -420,7 +421,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.black,
+                            color: isLightMode ? AppColors.black : AppColors.primary,
                           ),
                         ),
                         TextSpan(
@@ -428,7 +429,7 @@ class _WeekQuizResultPageState extends State<WeekQuizResultPage> {
                               '— You need 70% to unlock the next week. Review the material and try again.',
                           style: TextStyle(
                             fontSize: 17.sp,
-                            color: AppColors.secondary.withAlpha(200),
+                            color: isLightMode ? AppColors.secondary.withAlpha(200) : AppColors.primary.withAlpha(150),
                           ),
                         ),
                       ],

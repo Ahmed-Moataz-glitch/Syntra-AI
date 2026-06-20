@@ -46,9 +46,17 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quiz Questions'),
+        title: Text(
+          'Quiz Questions',
+          style: TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.bold,
+            color: isLightMode ? AppColors.purple : AppColors.blue,
+          ),
+        ),
       ),
       body: BlocConsumer<LearnCubit, LearnState>(
         bloc: widget.learnCubit,
@@ -89,7 +97,7 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.black,
+                        color: isLightMode ? AppColors.black : AppColors.primary,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -97,7 +105,7 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                       'Answer all 10 questions. You need 70% to unlock the next week.',
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: AppColors.secondary.withAlpha(200),
+                        color: isLightMode ? AppColors.secondary.withAlpha(200) : AppColors.primary.withAlpha(150),
                       ),
                     ),
                     SizedBox(height: 24.h),
@@ -114,7 +122,12 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
                               color: AppColors.purple.withAlpha(12),
-                              borderRadius: BorderRadius.circular(12.r)),
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: Border.all(
+                                color: isLightMode ? AppColors.purple.withAlpha(100) : AppColors.blue.withAlpha(100),
+                                width: 1.2.r,
+                              ),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -124,7 +137,7 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.purple,
+                                    color: isLightMode ? AppColors.purple : AppColors.blue,
                                   ),
                                   children: [
                                     TextSpan(
@@ -134,7 +147,7 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w500,
                                         color:
-                                            AppColors.secondary.withAlpha(180),
+                                            isLightMode ? AppColors.secondary.withAlpha(180) : AppColors.primary.withAlpha(150),
                                       ),
                                     ),
                                   ],
@@ -146,7 +159,7 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: AppColors.black,
+                                  color: isLightMode ? AppColors.black : AppColors.primary,
                                 ),
                               ),
                               SizedBox(height: 12.h),
@@ -176,15 +189,15 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                                             decoration: BoxDecoration(
                                               color: question.selectedAnswer ==
                                                       option
-                                                  ? AppColors.purple
+                                                  ? isLightMode ? AppColors.purple.withAlpha(30) : AppColors.blue
                                                       .withAlpha(20)
-                                                  : AppColors.primary,
+                                                  : isLightMode ? AppColors.primary : AppColors.secondary,
                                               border: Border.all(
                                                 color:
                                                     question.selectedAnswer ==
                                                             option
-                                                        ? AppColors.purple
-                                                        : AppColors.gray
+                                                        ? isLightMode ? AppColors.purple : AppColors.blue
+                                                        : isLightMode ? AppColors.gray : AppColors.secondary
                                                             .withAlpha(150),
                                               ),
                                               borderRadius:
@@ -197,8 +210,8 @@ class _WeekQuizQuestionsPageState extends State<WeekQuizQuestionsPage> {
                                                 color:
                                                     question.selectedAnswer ==
                                                             option
-                                                        ? AppColors.purple
-                                                        : AppColors.black
+                                                        ? isLightMode ? AppColors.purple : AppColors.blue
+                                                        : isLightMode ? AppColors.black : AppColors.primary
                                                             .withAlpha(200),
                                               ),
                                             ),

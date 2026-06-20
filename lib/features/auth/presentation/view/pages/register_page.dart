@@ -108,7 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: SizedBox(
-          width: size.width * 0.425,
+          width: size.width * 0.44,
           height: size.height * 0.07,
           child: const LogoWidget(),
         ),
@@ -334,7 +334,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Text.rich(
-                              textScaler: TextScaler.linear(1.1),
+                              textScaler: isLightMode ? TextScaler.linear(1.1) : TextScaler.linear(1),
                               TextSpan(
                                 children: [
                                   TextSpan(

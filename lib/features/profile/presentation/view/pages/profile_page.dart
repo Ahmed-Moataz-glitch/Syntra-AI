@@ -442,7 +442,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   File(pickedUserProfileImage),
                                                   fit: BoxFit.fill,
                                                 )
-                                              : userProfileImage != null
+                                              : userProfileImage != null &&
+                                                      userProfileImage
+                                                          .isNotEmpty
                                                   ? CachedNetworkImage(
                                                       imageUrl:
                                                           userProfileImage,
@@ -639,7 +641,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: size.height * 0.02),
+                              SizedBox(height: size.height * 0.03),
                             ],
                           ),
                         ],
@@ -656,8 +658,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
                             child: Column(
                               children: [
-                                state.userDataResponseEntity
-                                        .user.finishedTracks.isEmpty
+                                (state.userDataResponseEntity.user.role ==
+                                            'recruiter' ||
+                                        state.userDataResponseEntity.user
+                                                .role ==
+                                            'team')
                                     ? const SizedBox.shrink()
                                     : Column(
                                         children: [
@@ -668,8 +673,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                           SizedBox(height: size.height * 0.02),
                                         ],
                                       ),
-                                state.userDataResponseEntity.user.skills.isEmpty &&
-                                        isLoading == false
+                                (state.userDataResponseEntity.user.role ==
+                                            'recruiter' ||
+                                        state.userDataResponseEntity.user
+                                                .role ==
+                                            'team')
                                     ? const SizedBox.shrink()
                                     : Column(
                                         children: [
@@ -683,7 +691,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                           );
-                        }else {
+                        } else {
                           return const SizedBox.shrink();
                         }
                       },

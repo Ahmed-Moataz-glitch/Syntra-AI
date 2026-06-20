@@ -13,6 +13,8 @@ abstract class AppApi {
       'syntraai-production-08b1.up.railway.app';
   static const String recommendedProjectsHost =
       'syntra-ai-projectrecommend-production.up.railway.app';
+  static const String interviewHost =
+      'mock-interview-production.up.railway.app';
   static const String baseUrl = '/api/v1';
   static const String loginEndpoint = '/auth/login';
   static const String googleEndpoint = '/auth/google';
@@ -42,4 +44,13 @@ abstract class AppApi {
   static const String evaluationResultEndpoint = '/results/';
   static const String setTeamEndpoint = '/set-team';
   static const String generateAndAssignTasksEndpoint = '/generate-and-assign';
+  static const String getTracksEndpoint = '/api/tracks';
+  static const String getLanguagesEndpoint = '/api/languages';
+  static const String startInterviewEndpoint = '/api/interview/start';
+  static const String interviewChatEndpoint = '/api/interview/chat';
+  static const String getInterviewSessionStatusEndpoint = '/api/interview/';
+  static const String endInterviewEndpointPart1 = '/api/interview/';
+  static const String endInterviewEndpointPart2 = '/end';
+  static const String textToAudioEndpoint = '/api/tts';
+  static const String processAudioEndpoint = '/api/stt';
 }

@@ -24,9 +24,9 @@ abstract class AppDialogs {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: isLightMode ? null : AppColors.purple,
-                      fontWeight: FontWeight.w600,
-                    ),
+                          color: isLightMode ? null : AppColors.purple,
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                 ),
               ],
@@ -44,7 +44,9 @@ abstract class AppDialogs {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: isError ? AppColors.secondary.withAlpha(180) : AppColors.secondary.withAlpha(200),
+        backgroundColor: isError
+            ? AppColors.secondary.withAlpha(180)
+            : AppColors.secondary.withAlpha(200),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.all(16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -57,6 +59,16 @@ abstract class AppDialogs {
           ),
         ),
       ),
+    );
+  }
+
+  static void showbottomSheet(BuildContext context,
+      {required Widget child}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return child;
+      },
     );
   }
 }

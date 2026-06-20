@@ -12,6 +12,7 @@ class ResourcesItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
     return InkWell(
       splashFactory: NoSplash.splashFactory,
       onTap: onPressed,
@@ -20,7 +21,7 @@ class ResourcesItemWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.transparent,
           border: Border.all(
-            color: AppColors.secondary.withAlpha(100),
+            color: isLightMode ? AppColors.secondary.withAlpha(100) : AppColors.primary.withAlpha(100),
             width: 1.2.r,
           ),
           borderRadius: BorderRadius.circular(12.r),
@@ -49,7 +50,7 @@ class ResourcesItemWidget extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontSize: 16.sp,
-                      color: AppColors.semiBlack.withAlpha(150),
+                      color: isLightMode ? AppColors.semiBlack.withAlpha(150) : AppColors.primary.withAlpha(150),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -59,7 +60,7 @@ class ResourcesItemWidget extends StatelessWidget {
                     link,
                     style: TextStyle(
                       fontSize: 16.sp,
-                      color: AppColors.black,
+                      color: isLightMode ? AppColors.black : AppColors.primary,
                     ),
                   ),
                 ],
@@ -67,7 +68,7 @@ class ResourcesItemWidget extends StatelessWidget {
             ),
             Icon(
               Icons.open_in_new_outlined,
-              color: AppColors.gray.withAlpha(200),
+              color: isLightMode ? AppColors.semiBlack.withAlpha(150) : AppColors.primary.withAlpha(150),
               size: 24.sp,
             ),
           ],

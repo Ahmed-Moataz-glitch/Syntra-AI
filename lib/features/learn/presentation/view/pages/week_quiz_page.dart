@@ -104,12 +104,13 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'WEEK ${widget.generateRoadmapResponseEntity.roadmap[widget.generateRoadmapResponseEntity.selectedIndex].weekNumber} QUIZ',
           style: TextStyle(
-            color: AppColors.purple,
+            color: isLightMode ? AppColors.purple : AppColors.blue,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -160,7 +161,7 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
                     Text(
                       'Review key points',
                       style: TextStyle(
-                        color: AppColors.black,
+                        color: isLightMode ? AppColors.black : AppColors.primary,
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w600,
                       ),
@@ -169,7 +170,7 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
                     Text(
                       'Edit, add, or remove points before generating your week quiz.',
                       style: TextStyle(
-                        color: AppColors.secondary,
+                        color: isLightMode ? AppColors.secondary : AppColors.primary.withAlpha(150),
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                       ),
@@ -187,7 +188,7 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
                               width: 8.w,
                               height: 8.w,
                               decoration: BoxDecoration(
-                                color: AppColors.purple,
+                                color: isLightMode ? AppColors.purple : AppColors.blue,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -212,8 +213,9 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.r),
                                     borderSide: BorderSide(
-                                      color: AppColors.purple.withAlpha(200),
+                                      color: isLightMode ? AppColors.purple.withAlpha(200) : AppColors.blue.withAlpha(200),
                                       width: 1.5.r,
+                                      strokeAlign: BorderSide.strokeAlignCenter,
                                     ),
                                   ),
                                 ),
@@ -223,7 +225,7 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
                               icon: Icon(
                                 Icons.delete,
                                 size: 28.sp,
-                                color: AppColors.secondary.withAlpha(150),
+                                color: isLightMode ? AppColors.secondary.withAlpha(150) : AppColors.primary.withAlpha(150),
                               ),
                               onPressed: () {
                                 setState(() {
@@ -254,7 +256,7 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
                               left: 3.w, right: 8.w, top: 6.h, bottom: 6.h),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppColors.purple,
+                              color: isLightMode ? AppColors.purple : AppColors.blue,
                               width: 1.5.r,
                             ),
                             borderRadius: BorderRadius.circular(12.r),
@@ -265,13 +267,13 @@ class _WeekQuizPageState extends State<WeekQuizPage> {
                               Icon(
                                 Icons.add,
                                 size: 24.sp,
-                                color: AppColors.purple,
+                                color: isLightMode ? AppColors.purple : AppColors.blue,
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 'Add point',
                                 style: TextStyle(
-                                  color: AppColors.purple,
+                                  color: isLightMode ? AppColors.purple : AppColors.blue,
                                   fontSize: 17.sp,
                                   fontWeight: FontWeight.w500,
                                 ),

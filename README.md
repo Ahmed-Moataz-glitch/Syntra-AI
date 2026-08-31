@@ -23,6 +23,18 @@
 ## 📖 Table of Contents
 
 - [Overview](#-overview)
+- [Demo Video](#-demo-video)
+- [Screenshots & UI Showcase](#-screenshots--ui-showcase)
+  - [🚀 Onboarding & Role Selection](#-onboarding--role-selection)
+  - [🔐 Authentication & Security Flows](#-authentication--security-flows)
+  - [🏠 Home & Ecosystem Hub](#-home--ecosystem-hub)
+  - [🧭 Phase 1: Diagnostic Assessment & Track Recommendation](#-phase-1-diagnostic-assessment--track-recommendation)
+  - [🗺️ Phase 2: Dynamic Roadmaps & Curated Resources](#-phase-2-dynamic-roadmaps--curated-resources)
+  - [📝 AI Quizzes & Retention Validation](#-ai-quizzes--retention-validation)
+  - [💻 Phase 3: Project Recommendations & Automated AI Grading](#-phase-3-project-recommendations--automated-ai-grading)
+  - [👥 Team Workspace & AI Task Decomposition](#-team-workspace--ai-task-decomposition)
+  - [💼 Phase 4: Recruiter Talent Discovery & Mock Interview Invitations](#-phase-4-recruiter-talent-discovery--mock-interview-invitations)
+  - [👤 User Profiles, Dark Theme & Full Arabic RTL Localization](#-user-profiles-dark-theme--full-arabic-rtl-localization)
 - [The 4-Stage Smart Workflow](#-the-4-stage-smart-workflow)
 - [Key Personas & Features](#-key-personas--features)
   - [🎓 The Learner](#-the-learner)
@@ -34,7 +46,6 @@
 - [Backend & AI Microservices Ecosystem](#-backend--ai-microservices-ecosystem)
 - [Getting Started & Installation](#-getting-started--installation)
 - [Configuration & Environment](#-configuration--environment)
-- [Screenshots & UI Showcase](#-screenshots--ui-showcase)
 - [Author & Acknowledgments](#-author--acknowledgments)
 - [License](#-license)
 
@@ -255,16 +266,286 @@ Make sure you have the following installed on your machine:
 
 ---
 
+## 🎬 Demo Video
+
+<div align="center">
+  <video src="Syntra_AI.mp4" controls="controls" width="85%" style="max-height:600px; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.18);">
+    Your browser does not support the video tag.
+  </video>
+  <br/><br/>
+  <p>
+    <b>▶️ <a href="Syntra_AI.mp4">Click here to view or download the complete Syntra.AI Walkthrough Video</a></b>
+  </p>
+</div>
+
+---
+
 ## 📱 Screenshots & UI Showcase
 
-<p align="center">
-  <!-- Placeholders for project preview screenshots -->
-  <img src="assets/images/splash_ios_android_12.png" width="30%" alt="Splash & Onboarding" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/images/splash_ios_android_11.png" width="30%" alt="Auth Screen" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/images/default_user_profile_image.jpg" width="30%" alt="Profile Screen" />
-</p>
+### 🚀 Onboarding & Role Selection
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="Screenshot_1770583171.png" width="100%" alt="Splash Screen" /><br/>
+      <sub><b>Splash Screen</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782066414.png" width="100%" alt="Welcome to Syntra.AI" /><br/>
+      <sub><b>1. Welcome & Intro</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782066423.png" width="100%" alt="Learner Flow" /><br/>
+      <sub><b>2. Learner Flow</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782066427.png" width="100%" alt="Team Flow" /><br/>
+      <sub><b>3. Team Flow</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782066431.png" width="100%" alt="Employer Flow" /><br/>
+      <sub><b>4. Employer Flow</b></sub>
+    </td>
+    <td align="center" width="25%"></td>
+    <td align="center" width="25%"></td>
+    <td align="center" width="25%"></td>
+  </tr>
+</table>
+
+### 🔐 Authentication & Security Flows
+<table>
+  <tr>
+    <td align="center" width="20%">
+      <img src="Screenshot_1781385341.png" width="100%" alt="Sign Up" /><br/>
+      <sub><b>Multi-Role Sign Up</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1781385436.png" width="100%" alt="Sign In" /><br/>
+      <sub><b>Sign In (Email / Social)</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782066558.png" width="100%" alt="Forgot Password" /><br/>
+      <sub><b>Forgot Password</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782067769.png" width="100%" alt="OTP Verification" /><br/>
+      <sub><b>OTP Code Verification</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782067818.png" width="100%" alt="Reset Password" /><br/>
+      <sub><b>Reset Password</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782067936.png" width="100%" alt="Password Reset Success" /><br/>
+      <sub><b>Password Reset Success</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782067762.png" width="100%" alt="OTP Input" /><br/>
+      <sub><b>OTP Entry State</b></sub>
+    </td>
+    <td align="center" width="20%"></td>
+    <td align="center" width="20%"></td>
+    <td align="center" width="20%"></td>
+  </tr>
+</table>
+
+### 🏠 Home & Ecosystem Hub
+<table>
+  <tr>
+    <td align="center" width="20%">
+      <img src="Screenshot_1781386058.png" width="100%" alt="Home Screen" /><br/>
+      <sub><b>Home Dashboard</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782065877.png" width="100%" alt="Smart Workflow" /><br/>
+      <sub><b>4-Phase Sequence</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782065889.png" width="100%" alt="Learner Journey" /><br/>
+      <sub><b>The Learner Hub</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782065895.png" width="100%" alt="Collaborative Workspace" /><br/>
+      <sub><b>The Team Hub</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782065900.png" width="100%" alt="Precision Recruitment" /><br/>
+      <sub><b>The Recruiter Hub</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 🧭 Phase 1: Diagnostic Assessment & Track Recommendation
+<table>
+  <tr>
+    <td align="center" width="33.33%">
+      <img src="Screenshot_1781386588.png" width="100%" alt="Recommendation Intro" /><br/>
+      <sub><b>Recommendation System Intro</b></sub>
+    </td>
+    <td align="center" width="33.33%">
+      <img src="Screenshot_1781386746.png" width="100%" alt="Diagnostic Questions" /><br/>
+      <sub><b>10-Question Diagnostic Assessment</b></sub>
+    </td>
+    <td align="center" width="33.33%">
+      <img src="Screenshot_1781386852.png" width="100%" alt="Suggested Track" /><br/>
+      <sub><b>Suggested Track & Weekly Hours Slider</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 🗺️ Phase 2: Dynamic Roadmaps & Curated Resources
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782065920.png" width="100%" alt="Roadmap Light" /><br/>
+      <sub><b>Dynamic Roadmap (Light Mode)</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1781815912.png" width="100%" alt="Roadmap Dark" /><br/>
+      <sub><b>Dynamic Roadmap (Dark Mode)</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1781815879.png" width="100%" alt="Week Details Dark" /><br/>
+      <sub><b>Week Details & Curated Resources</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782075017.png" width="100%" alt="Roadmap Completed" /><br/>
+      <sub><b>All 14 Weeks Verified & Unlocked</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 📝 AI Quizzes & Retention Validation
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="Screenshot_1782073917.png" width="70%" alt="Quiz Questions" /><br/>
+      <sub><b>AI Generated Topic Quiz (MCQ & True/False)</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="Screenshot_1782074473.png" width="70%" alt="Quiz Result" /><br/>
+      <sub><b>Quiz Passed (Score 90%) — Next Week Unlocked</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 💻 Phase 3: Project Recommendations & Automated AI Grading
+<table>
+  <tr>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782066031.png" width="100%" alt="Capstone Ideas" /><br/>
+      <sub><b>Capstone Project Ideas</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782075210.png" width="100%" alt="Project Spec" /><br/>
+      <sub><b>Project Specs & Architecture</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782075219.png" width="100%" alt="Submit Project" /><br/>
+      <sub><b>Submit Project Submission</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1781549768.png" width="100%" alt="AI Evaluation Strengths" /><br/>
+      <sub><b>AI Evaluation: Strengths & Weaknesses</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1781549771.png" width="100%" alt="AI Evaluation Suggestions" /><br/>
+      <sub><b>AI Evaluation: Actionable Suggestions</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 👥 Team Workspace & AI Task Decomposition
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="Screenshot_1781392123.png" width="100%" alt="Define Team" /><br/>
+      <sub><b>1. Define Team Members & Skillsets</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1781392338.png" width="100%" alt="Describe Project" /><br/>
+      <sub><b>2. Input Project Requirements</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782076019.png" width="100%" alt="Generated Tasks" /><br/>
+      <sub><b>3. AI-Assigned Tasks per Member</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782076027.png" width="100%" alt="Skill Gap" /><br/>
+      <sub><b>4. Skill Gap & Unassigned Tasks</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 💼 Phase 4: Recruiter Talent Discovery & Mock Interview Invitations
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782076239.png" width="100%" alt="Talent Profile" /><br/>
+      <sub><b>Completed Track Talent Discovery</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782076296.png" width="100%" alt="Verified Skills" /><br/>
+      <sub><b>Verified Skills & Invite Action</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782076276.png" width="100%" alt="Send Invite Modal" /><br/>
+      <sub><b>Interview Track Selection Modal</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="Screenshot_1782076283.png" width="100%" alt="Invite Success" /><br/>
+      <sub><b>Mock Interview Invite Sent Confirmation</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 👤 User Profiles, Dark Theme & Full Arabic RTL Localization
+<table>
+  <tr>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077182.png" width="100%" alt="Learner Profile" /><br/>
+      <sub><b>Learner Profile (Light)</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077187.png" width="100%" alt="Verified Tracks" /><br/>
+      <sub><b>Verified Track Badges</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077194.png" width="100%" alt="Skills Acquired" /><br/>
+      <sub><b>34 Acquired Skills List</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077261.png" width="100%" alt="Team Profile" /><br/>
+      <sub><b>Team Profile</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077127.png" width="100%" alt="Recruiter Profile" /><br/>
+      <sub><b>Recruiter Profile</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077427.png" width="100%" alt="Arabic Profile RTL" /><br/>
+      <sub><b>الملف الشخصي (عربي RTL)</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077431.png" width="100%" alt="Arabic Details RTL" /><br/>
+      <sub><b>تفاصيل الحساب (عربي RTL)</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077267.png" width="100%" alt="Team Details" /><br/>
+      <sub><b>Team Profile Details</b></sub>
+    </td>
+    <td align="center" width="20%">
+      <img src="Screenshot_1782077142.png" width="100%" alt="Recruiter Details" /><br/>
+      <sub><b>Recruiter Profile Details</b></sub>
+    </td>
+    <td align="center" width="20%"></td>
+  </tr>
+</table>
 
 ---
 
